@@ -1,0 +1,16 @@
+{
+    "tokenDev": "",
+    "token": "",
+    "prefix": "!",
+    "database": {
+        "host": "",
+        "name": "",
+        "username": "",
+        "password": ""
+    },
+    "esi": {
+            "datasource": "tranquility",
+            "ifNoneMatch": "ifNoneMatch_example"
+    }
+
+}
