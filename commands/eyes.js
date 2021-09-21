@@ -39,7 +39,7 @@ exports.run = async (client, message, args) => {
     }
     
     message.channel.send(messageText).then(sentEmbed => {
-        emojiList.forEach(emoji => sendEmbed.react(emoji));
+        emojiList.forEach(emoji => sentEmbed.react(emoji));
         /*
         sentEmbed.react(kourm)
         sentEmbed.react(lamaa)
