@@ -16,11 +16,6 @@ exports.run = async (client, message, args) => {
     var command = message.content.startsWith(`${config.prefix}eyes`);
     var arg = messageSanitized.replace(`${config.prefix}eyes `, '');
     
-    const kourm = message.guild.emojis.cache.find(emoji => emoji.name === 'johnbob');
-    const lamaa = message.guild.emojis.cache.find(emoji => emoji.name === 'pat');
-    const ymp = message.guild.emojis.cache.find(emoji => emoji.name === 'really');
-    const camal = message.guild.emojis.cache.find(emoji => emoji.name === 'catgun');
-    
     var emojiList = [];
     
     var messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
@@ -40,15 +35,9 @@ exports.run = async (client, message, args) => {
     
     message.channel.send(messageText).then(sentEmbed => {
         emojiList.forEach(emoji => sentEmbed.react(emoji));
-        /*
-        sentEmbed.react(kourm)
-        sentEmbed.react(lamaa)
-        sentEmbed.react(ymp)
-        sentEmbed.react(camal)*/
-
+        
         client.on('messageReactionAdd', (reaction, user) => {
-            if(reaction.emoji.name === kourm) {
-            message.channel.send(reaction.emoji.users);
+            console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
         }
     })
     });
