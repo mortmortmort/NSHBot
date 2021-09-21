@@ -4,7 +4,7 @@ const countdown = require('moment-countdown');
 const moment = require('moment');
 const config = require("../config.json");
 
-const eyesData = [
+const _eyesData = [
     { "systemName": "Kourmonen", "emojiName": "johnbob" },
     { "systemName": "Lamaa", "emojiName": "pat" },
     { "systemName": "Y-MPWL", "emojiName": "really" },
@@ -16,28 +16,31 @@ exports.run = async (client, message, args) => {
     var command = message.content.startsWith(`${config.prefix}eyes`);
     var arg = messageSanitized.replace(`${config.prefix}eyes `, '');
     
-    var emojiList = [];
+    // deep copy
+    var eyesData = JSON.parse(JSON.stringify(_eyesData));
     
+    eyesData.forEach(systemData => {
+        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
+        eyesData["emojiIcon"] = emojiIcon;
+    });    
+
     var messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
     
     eyesData.forEach(systemData => messageText += "**" + systemData.systemName + ":**\n");
     messageText += `\n\n**React with:**\n`;
 
     eyesData.forEach( systemData => {
-        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
-        emojiList.push(emojiIcon);
-        
         messageText += emojiIcon.toString() + " = " + systemData.systemName + "\n";
     });
     
     message.channel.send(messageText).then(targetMessage => {
-        emojiList.forEach(emoji => targetMessage.react(emoji));
-        
+        eyesData.forEach(systemData => targetMessage.react(eyesData.emojiIcon));
+
         client.on('messageReactionAdd', (reaction, user) => {
             if (message.author.bot) return;
             
             console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
-            messageText += "user: " + user.userName + "\n";
+            messageText += "user: " + user.username + "\n";
             targetMessage.edit(messageText);
         });
     });
