@@ -59,4 +59,5 @@ relays.forEach(relay => {
   //client.commands.set(relayName, props);
 });
 */
+console.log("Attempting to log in with token = " + discord_token);
 client.login(discord_token);
