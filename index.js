@@ -46,6 +46,7 @@ files.forEach(file => {
   client.commands.set(commandName, props);
 });
 
+/*
 let relays = [];
 recursive("./relays/", relays);
 relays.forEach(relay => {
@@ -57,5 +58,5 @@ relays.forEach(relay => {
   console.log(`Attempting to load ${relayName} relay`);
   //client.commands.set(relayName, props);
 });
-
+*/
 client.login(discord_token);
