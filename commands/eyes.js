@@ -21,7 +21,7 @@ exports.run = async (client, message, args) => {
     
     eyesData.forEach(systemData => {
         const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
-        eyesData["emojiIcon"] = emojiIcon;
+        systemData["emojiIcon"] = emojiIcon;
     });    
 
     var messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
