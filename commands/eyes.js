@@ -30,12 +30,13 @@ exports.run = async (client, message, args) => {
         
         messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
     
-        eyesData.forEach(systemData => {
-            messageText += "**" + systemData.systemName + ":** " + systemData.currentEyes.join(" ") + "\n";
-        });
+        eyesData.forEach(systemData => messageText += "**" + systemData.systemName + ":** " + systemData.currentEyes.join(" ") + "\n");
+        
         messageText += `\n\n**React with:**\n`;
 
         eyesData.forEach( systemData => messageText += systemData.emojiIcon.toString() + " = " + systemData.systemName + "\n");
+        
+        return messageText;
     }
     
     var messageText = generateMessageText()
