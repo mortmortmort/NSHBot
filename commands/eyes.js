@@ -27,21 +27,12 @@ exports.run = async (client, message, args) => {
         messageText += "**" + system + "**\n";
     }
    
-    messageText += `\n
-    
-    **React with:**`;
+    messageText += `\n\n**React with:**`;
 
-    /*
     for (var system in eyesData) {
-        messageText += "**" + system + "**\n";
+        const emoji = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emoji);
+        messageText += emoji + " = " + system + "\n";
     }
-    ${kourm} = Kourmonen\n
-    ${lamaa} = Lamaa\n
-    ${ymp} = Y-MP\n
-    ${camal} = Camal\n
-    
-    `;*/
-
     
     message.channel.send(messageText).then(sentEmbed => {
         sentEmbed.react(kourm)
