@@ -49,14 +49,22 @@ exports.run = async (client, message, args) => {
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    console.log("messageReactionAdd(): reaction match!!!");
+                    systemData.currentEyes.push(user.username);
+                    targetMessage.edit(generateMessageText());
                 }
             });
-            
-            console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
-            messageText += "user: " + user.username + "\n";
-            targetMessage.edit(messageText);
         });
+        
+        client.on('messageReactionRemove', (reaction, user) => {
+            if (user.bot) return;
+            
+            eyesData.forEach(systemData => {
+                if (reaction.emoji.name === systemData.emojiIcon.name) {
+                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === user.username)
+                    targetMessage.edit(generateMessageText());
+                }
+            });
+        });        
     });
     
 
