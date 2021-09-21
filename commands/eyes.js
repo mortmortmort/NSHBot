@@ -5,10 +5,10 @@ const moment = require('moment');
 const config = require("../config.json");
 
 const eyesData = {
-    "Kourmonen": { "emoji": "johnbob" },
-    "Lamaa": { "emoji": "pat" },
-    "Y-MPWL": { "emoji": "really" },
-    "Camal": { "emoji": "catgun" }
+    "Kourmonen": { "emojiName": "johnbob" },
+    "Lamaa": { "emojiName": "pat" },
+    "Y-MPWL": { "emojiName": "really" },
+    "Camal": { "emojiName": "catgun" }
 };
 
 exports.run = async (client, message, args) => {    
@@ -30,8 +30,8 @@ exports.run = async (client, message, args) => {
     messageText += `\n\n**React with:**`;
 
     for (var system in eyesData) {
-        const emoji = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emoji);
-        messageText += emoji + " = " + system + "\n";
+        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emojiName);
+        messageText += emojiIcon + " = " + system + "\n";
     }
     
     message.channel.send(messageText).then(sentEmbed => {
