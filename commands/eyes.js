@@ -31,7 +31,7 @@ exports.run = async (client, message, args) => {
         messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
     
         eyesData.forEach(systemData => {
-            messageText += "**" + systemData.systemName + ":** " + systemData.currentEyes.join(" ") + \n";
+            messageText += "**" + systemData.systemName + ":** " + systemData.currentEyes.join(" ") + "\n";
         });
         messageText += `\n\n**React with:**\n`;
 
