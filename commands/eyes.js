@@ -60,7 +60,7 @@ exports.run = async (client, message, args) => {
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === user.username)
+                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === user.username));
                     targetMessage.edit(generateMessageText());
                 }
             });
