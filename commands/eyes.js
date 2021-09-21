@@ -48,7 +48,7 @@ exports.run = async (client, message, args) => {
             if (user.bot) return;
             
             eyesData.forEach(systemData => {
-                if (reaction == systemData.emojiIcon) {
+                if (reaction.emoji.name === systemData.emojiIcon.name) {
                     console.log("messageReactionAdd(): reaction match!!!");
                 }
             });
