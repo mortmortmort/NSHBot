@@ -30,11 +30,11 @@ exports.run = async (client, message, args) => {
     messageText += `\n\n**React with:**\n`;
 
     eyesData.forEach( systemData => {
-        messageText += emojiIcon.toString() + " = " + systemData.systemName + "\n";
+        messageText += systemData.emojiIcon.toString() + " = " + systemData.systemName + "\n";
     });
     
     message.channel.send(messageText).then(targetMessage => {
-        eyesData.forEach(systemData => targetMessage.react(eyesData.emojiIcon));
+        eyesData.forEach(systemData => targetMessage.react(systemData.emojiIcon));
 
         client.on('messageReactionAdd', (reaction, user) => {
             if (message.author.bot) return;
