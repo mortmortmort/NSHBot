@@ -33,11 +33,13 @@ exports.run = async (client, message, args) => {
         messageText += emojiIcon.toString() + " = " + system + "\n";
     }
     
-    message.channel.send(messageText).then(sentEmbed => {
-        emojiList.forEach(emoji => sentEmbed.react(emoji));
+    message.channel.send(messageText).then(targetMessage => {
+        emojiList.forEach(emoji => targetMessage.react(emoji));
         
         client.on('messageReactionAdd', (reaction, user) => {
             console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
+            messageText += "user\n";
+            targetMessage.edit(messageText);
         });
     });
     
