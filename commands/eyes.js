@@ -31,7 +31,7 @@ exports.run = async (client, message, args) => {
 
     for (var system in eyesData) {
         const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emojiName);
-        messageText += str(emojiIcon) + " = " + system + "\n";
+        messageText += emojiIcon.toString() + " = " + system + "\n";
     }
     
     message.channel.send(messageText).then(sentEmbed => {
