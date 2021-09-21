@@ -4,6 +4,8 @@ const fs = require("fs");
 const client = new Discord.Client();
 const config = require("./config.json");
 const path = require("path");
+const discord_token = process.env.DISCORD_TOKEN;
+
 
 client.config = config;
 // This loop reads the /events/ folder and attaches each event file to the appropriate event.
@@ -56,4 +58,4 @@ relays.forEach(relay => {
   //client.commands.set(relayName, props);
 });
 
-client.login(config.token);
+client.login(discord_token);
