@@ -38,8 +38,7 @@ exports.run = async (client, message, args) => {
         
         client.on('messageReactionAdd', (reaction, user) => {
             console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
-        }
-    })
+        });
     });
     
 
