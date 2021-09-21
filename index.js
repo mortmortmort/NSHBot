@@ -4,7 +4,7 @@ const fs = require("fs");
 const client = new Discord.Client();
 const config = require("./config.json");
 const path = require("path");
-const discord_token = "ODczNjI5MDEwNzcxNDQzNzMz.YQ7Maw.udeEgYWPWBUIASytPRvYzwxqdZA";
+const discord_token = process.env.DISCORD_TOKEN;
 
 
 client.config = config;
