@@ -4,12 +4,12 @@ const countdown = require('moment-countdown');
 const moment = require('moment');
 const config = require("../config.json");
 
-const eyesData = {
-    "Kourmonen": { "emojiName": "johnbob" },
-    "Lamaa": { "emojiName": "pat" },
-    "Y-MPWL": { "emojiName": "really" },
-    "Camal": { "emojiName": "catgun" }
-};
+const eyesData = [
+    { "systemName": "Kourmonen", "emojiName": "johnbob" },
+    { "systemName": "Lamaa", "emojiName": "pat" },
+    { "systemName": "Y-MPWL", "emojiName": "really" },
+    { "systemName": "Camal", "emojiName": "catgun" }
+];
 
 exports.run = async (client, message, args) => {    
     var messageSanitized = message.content.toLowerCase();
@@ -20,18 +20,15 @@ exports.run = async (client, message, args) => {
     
     var messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
     
-    for (var system in eyesData) {
-        messageText += "**" + system + ":**\n";
-    }
-   
+    eyesData.forEach(systemData => messageText += "**" + systemData.systemName + ":**\n");
     messageText += `\n\n**React with:**\n`;
 
-    for (var system in eyesData) {
-        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emojiName);
+    eyesData.forEach( systemData => {
+        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
         emojiList.push(emojiIcon);
         
-        messageText += emojiIcon.toString() + " = " + system + "\n";
-    }
+        messageText += emojiIcon.toString() + " = " + systemData.systemName + "\n";
+    });
     
     message.channel.send(messageText).then(targetMessage => {
         emojiList.forEach(emoji => targetMessage.react(emoji));
@@ -40,7 +37,7 @@ exports.run = async (client, message, args) => {
             if (message.author.bot) return;
             
             console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
-            messageText += "user: " + user.userName + \n";
+            messageText += "user: " + user.userName + "\n";
             targetMessage.edit(messageText);
         });
     });
