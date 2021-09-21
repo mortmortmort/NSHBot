@@ -21,24 +21,30 @@ exports.run = async (client, message, args) => {
     const ymp = message.guild.emojis.cache.find(emoji => emoji.name === 'really');
     const camal = message.guild.emojis.cache.find(emoji => emoji.name === 'catgun');
     
+    var emojiList = [];
+    
     var messageText = `@everyone \n**Eyes Monitoring Started.**\n\n`;
     
     for (var system in eyesData) {
-        messageText += "**" + system + "**\n";
+        messageText += "**" + system + ":**\n";
     }
    
     messageText += `\n\n**React with:**\n`;
 
     for (var system in eyesData) {
         const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === eyesData[system].emojiName);
+        emojiList.push(emojiIcon);
+        
         messageText += emojiIcon.toString() + " = " + system + "\n";
     }
     
     message.channel.send(messageText).then(sentEmbed => {
+        emojiList.forEach(emoji => sendEmbed.react(emoji));
+        /*
         sentEmbed.react(kourm)
         sentEmbed.react(lamaa)
         sentEmbed.react(ymp)
-        sentEmbed.react(camal)
+        sentEmbed.react(camal)*/
 
         client.on('messageReactionAdd', (reaction, user) => {
             if(reaction.emoji.name === kourm) {
