@@ -37,8 +37,10 @@ exports.run = async (client, message, args) => {
         emojiList.forEach(emoji => targetMessage.react(emoji));
         
         client.on('messageReactionAdd', (reaction, user) => {
+            if (message.author.bot) return;
+            
             console.log("messageReactionAdd(): reaction = " + reaction + ", user = " + user);
-            messageText += "user\n";
+            messageText += "user: " + user.userName + \n";
             targetMessage.edit(messageText);
         });
     });
