@@ -73,7 +73,7 @@ function initRelays() {
   });  
 }
 
-function init() {
+async function init() {
   const client = new Discord.Client();
   const discord_token = await getDiscordToken();
   client.config = config;
