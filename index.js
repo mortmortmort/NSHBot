@@ -6,7 +6,7 @@ const config = require("./config.json");
 const path = require("path");
 
 async function getDiscordToken() {
-  await data = fsp.readFile("./discord.token");
+  const data = await fsp.readFile("./discord.token");
   
   if (data && data !== undefined) {
     return data;
