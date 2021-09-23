@@ -1,11 +1,12 @@
 const Discord = require("discord.js");
 const Enmap = require("enmap");
 const fs = require("fs");
+const fsp = require("fs").promises;
 const config = require("./config.json");
 const path = require("path");
 
-function getDiscordToken() {
-  const data = fs.readFile("./discord.token");
+async function getDiscordToken() {
+  await data = fsp.readFile("./discord.token");
   
   if (data && data !== undefined) {
     return data;
@@ -74,7 +75,7 @@ function initRelays() {
 
 function init() {
   const client = new Discord.Client();
-  const discord_token = getDiscordToken();
+  const discord_token = await getDiscordToken();
   client.config = config;
   client.commands = new Enmap();
   
