@@ -7,7 +7,7 @@ const path = require("path");
 
 function getDiscordToken() {
   if (fs.existsSync("./discord.token")) {
-    const data = fsp.readFileSync("./discord.token");
+    const data = fs.readFileSync("./discord.token");
   
     if (data && data !== undefined) {
       return data;
