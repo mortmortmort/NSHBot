@@ -75,3 +75,5 @@ function init() {
   console.log("Attempting to log in with token = " + discord_token);
   client.login(discord_token);
 }
+
+init();
