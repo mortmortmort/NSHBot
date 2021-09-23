@@ -10,7 +10,7 @@ function getDiscordToken() {
     const data = fs.readFileSync("./discord.token");
   
     if (data && data !== undefined) {
-      return data.trim();
+      return data.toString().trim();
     }
   }
 
