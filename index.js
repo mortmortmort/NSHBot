@@ -5,7 +5,17 @@ const config = require("./config.json");
 const path = require("path");
 
 function getDiscordToken() {
-  return process.env.DISCORD_TOKEN;
+  const data = fs.readFile("./discord.token");
+  
+  if (data && data !== undefined) {
+    return data;
+  }
+
+  if (process.env.DISCORD_TOKEN) {
+    return process.env.DISCORD_TOKEN;
+  }
+  
+  throw "Unable to find Discord Bot Token. Check './discord.token' or the DISCORD_TOKEN ENV variable";
 }
 
 function recursive(dir, result = []) {
