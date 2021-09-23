@@ -5,11 +5,13 @@ const fsp = require("fs").promises;
 const config = require("./config.json");
 const path = require("path");
 
-async function getDiscordToken() {
-  const data = await fsp.readFile("./discord.token");
+function getDiscordToken() {
+  if (fs.existsSync("./discord.token")) {
+    const data = fsp.readFileSync("./discord.token");
   
-  if (data && data !== undefined) {
-    return data;
+    if (data && data !== undefined) {
+      return data;
+    }
   }
 
   if (process.env.DISCORD_TOKEN) {
@@ -73,9 +75,9 @@ function initRelays() {
   });  
 }
 
-async function init() {
+function init() {
   const client = new Discord.Client();
-  const discord_token = await getDiscordToken();
+  const discord_token = getDiscordToken();
   client.config = config;
   client.commands = new Enmap();
   
