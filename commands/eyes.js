@@ -1,8 +1,4 @@
-const rp = require("request-promise");
-const Discord = require("discord.js");
-const countdown = require('moment-countdown');
-const moment = require('moment');
-const config = require("../config.json");
+const Permissions = require("../permissions.js");
 
 const _eyesData = [
     { "systemName": "Kourmonen", "emojiName": "johnbob" },
@@ -11,11 +7,11 @@ const _eyesData = [
     { "systemName": "Camal", "emojiName": "catgun" }
 ];
 
+exports.getPermissions = (client, message, args) => {
+    return { User: Permissions.UserPermissions.ServerAdmin, Channel: Permissions.ChannelPermissions.Limited };
+};
+
 exports.run = async (client, message, args) => {    
-    var messageSanitized = message.content.toLowerCase();
-    var command = message.content.startsWith(`${config.prefix}eyes`);
-    var arg = messageSanitized.replace(`${config.prefix}eyes `, '');
-    
     // deep copy
     var eyesData = JSON.parse(JSON.stringify(_eyesData));
     
@@ -66,6 +62,4 @@ exports.run = async (client, message, args) => {
             });
         });        
     });
-    
-
 }

@@ -1,3 +1,5 @@
+const Permissions = require("../permissions.js");
+
 module.exports = (client, message) => {
     // Ignore all bots
     if (message.author.bot) return;
@@ -13,8 +15,15 @@ module.exports = (client, message) => {
     const cmd = client.commands.get(command);
 
     // If that command doesn't exist, silently exit and do nothing
-   if (!cmd) return message.reply("that command does not exist.");
+    if (!cmd) return; // message.reply("that command does not exist.");
 
-    // Run the command
-    cmd.run(client, message, args);
+    const perms = (cmd.getPermissions) ? cmd.getPermissions() : Permissions.defaultPermissions;
+    
+    if (Permissions.checkPermissions(client, message, perms)) {
+        // Run the command
+        cmd.run(client, message, args);
+    } else {
+        console.log("command did not meet permission requirements");
+    }
+
   };
