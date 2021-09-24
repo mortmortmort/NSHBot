@@ -5,8 +5,8 @@ const config = require("./config.json");
 const path = require("path");
 
 function getDiscordToken() {
-  if (fs.existsSync("./discord.token")) {
-    const data = fs.readFileSync("./discord.token");
+  if (fs.existsSync("./secrets/discord.token")) {
+    const data = fs.readFileSync("./secrets/discord.token");
   
     if (data && data !== undefined) {
       return data.toString().trim();
@@ -17,7 +17,7 @@ function getDiscordToken() {
     return process.env.DISCORD_TOKEN;
   }
   
-  throw "Unable to find Discord Bot Token. Check './discord.token' or the DISCORD_TOKEN ENV variable";
+  throw "Unable to find Discord Bot Token. Check './secrets/discord.token' or the DISCORD_TOKEN ENV variable";
 }
 
 function recursive(dir, result = []) {
