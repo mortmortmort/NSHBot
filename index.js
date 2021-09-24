@@ -1,7 +1,6 @@
 const Discord = require("discord.js");
 const Enmap = require("enmap");
 const fs = require("fs");
-const fsp = require("fs").promises;
 const config = require("./config.json");
 const path = require("path");
 
