@@ -1,26 +1,26 @@
 const Discord = require("discord.js");
 const Enmap = require("enmap");
 const fs = require("fs");
-const client = new Discord.Client();
 const config = require("./config.json");
 const path = require("path");
 
-client.config = config;
-// This loop reads the /events/ folder and attaches each event file to the appropriate event.
-fs.readdir("./events/", (err, files) => {
-  if (err) return console.error(err);
-  files.forEach(file => {
-    if (!file.endsWith(".js")) return;
-    const event = require(`./events/${file}`);
-    let eventName = file.split(".")[0];
-    client.on(eventName, event.bind(null, client));
-    delete require.cache[require.resolve(`./events/${file}`)];
-  });
-});
+function getDiscordToken() {
+  if (fs.existsSync("./discord.token")) {
+    const data = fs.readFileSync("./discord.token");
+  
+    if (data && data !== undefined) {
+      return data.toString().trim();
+    }
+  }
 
-client.commands = new Enmap();
+  if (process.env.DISCORD_TOKEN) {
+    return process.env.DISCORD_TOKEN;
+  }
+  
+  throw "Unable to find Discord Bot Token. Check './discord.token' or the DISCORD_TOKEN ENV variable";
+}
 
-const recursive = function(dir, result = []) {
+function recursive(dir, result = []) {
   // list files in directory and loop through
   fs.readdirSync(dir).forEach(file => {
     // builds full path of file
@@ -32,28 +32,60 @@ const recursive = function(dir, result = []) {
   });
 };
 
-let files = [];
-recursive("./commands/", files);
-files.forEach(file => {
-  if (!file.endsWith(".js")) {
-    return;
-  }
-  let props = require(file);
-  let commandName = path.parse(file).name;
-  console.log(`Attempting to load command ${commandName}`);
-  client.commands.set(commandName, props);
-});
+function initEvents(client) {
+  // This loop reads the /events/ folder and attaches each event file to the appropriate event.
+  fs.readdir("./events/", (err, files) => {
+    if (err) return console.error(err);
+    files.forEach(file => {
+      if (!file.endsWith(".js")) return;
+      const event = require(`./events/${file}`);
+      let eventName = file.split(".")[0];
+      client.on(eventName, event.bind(null, client));
+      delete require.cache[require.resolve(`./events/${file}`)];
+    });
+  });
+}
 
-let relays = [];
-recursive("./relays/", relays);
-relays.forEach(relay => {
-  if (!relay.endsWith(".js")) {
-    return;
-  }
-  let props = require(relay);
-  let relayName = path.parse(relay).name;
-  console.log(`Attempting to load ${relayName} relay`);
-  //client.commands.set(relayName, props);
-});
+function initCommands(client) {
+  let files = [];
+  recursive("./commands/", files);
+  files.forEach(file => {
+    if (!file.endsWith(".js")) {
+      return;
+    }
+    let props = require(file);
+    let commandName = path.parse(file).name;
+    console.log(`Attempting to load command ${commandName}`);
+    client.commands.set(commandName, props);
+  });
+}
 
-client.login(config.token);
+function initRelays() {
+  let relays = [];
+  recursive("./relays/", relays);
+  relays.forEach(relay => {
+    if (!relay.endsWith(".js")) {
+      return;
+    }
+    let props = require(relay);
+    let relayName = path.parse(relay).name;
+    console.log(`Attempting to load ${relayName} relay`);
+    //client.commands.set(relayName, props);
+  });  
+}
+
+function init() {
+  const client = new Discord.Client();
+  const discord_token = getDiscordToken();
+  client.config = config;
+  client.commands = new Enmap();
+  
+  initEvents(client);
+  initCommands(client);
+  //initRelays(client);
+
+  console.log("Attempting to log in with token = " + discord_token);
+  client.login(discord_token);
+}
+
+init();
