@@ -1,6 +1,6 @@
-const FSP = require("fs").promises;
+const PersistUtil = require("./persist-util");
 
-const PATH_TO_DATAFILE = "./data/botadmin.json";
+const FILENAME = "botadmin.json";
 
 function makeBotAdminData(roleId) {
     return {
@@ -15,16 +15,9 @@ function createDefaultBotAdminData() {
 module.exports.makeBotAdminData = makeBotAdminData;
 
 module.exports.readFromDisk = async function() {
-    try {
-        const BotAdminDataBuffer = await FSP.readFile(PATH_TO_DATAFILE);
-        return JSON.parse(BotAdminDataBuffer);
-    } catch (ex) {
-        const BotAdminData = createDefaultBotAdminData();
-        return BotAdminData;
-    }
+    return PersistUtil.readFromDisk(FILENAME, createDefaultBotAdminData);
 };
 
 module.exports.writeToDisk = async function(botAdminData) {
-    const buffer = JSON.stringify(botAdminData);
-    await FSP.writeFile(PATH_TO_DATAFILE, buffer, { flags: "w" });
+    return PersistUtil.writeToDisk(FILENAME, botAdminData);
 };

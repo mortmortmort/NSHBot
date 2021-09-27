@@ -29,7 +29,9 @@ module.exports.checkPermissions = async (client, message, perms) => {
 
 			case UserPermissions.BotAdmin:
 				const BotAdminData = await PersistBotAdmin.readFromDisk();
-				return message.member.roles.cache.has(BotAdminData.RoleId);
+				const hasRole = message.member.roles.cache.has(BotAdminData.RoleId);
+				console.log("BotAdminData.RoleId = " + BotAdminData.RoleId + " hasRole = " + hasRole);
+				return hasRole;
 
 			case UserPermissions.ServerAdmin:
 				return message.member.hasPermission("ADMINISTRATOR");
@@ -56,5 +58,8 @@ module.exports.checkPermissions = async (client, message, perms) => {
 		};
 	};
 
-	return checkUserPermissions(client, message, perms) && checkChannelPermissions(client, message, perms);
+	var userPerms = await checkUserPermissions(client, message, perms);
+	var channelPerms = await checkChannelPermissions(client, message, perms);
+
+	return userPerms && channelPerms;
 };
