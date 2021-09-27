@@ -20,8 +20,10 @@
     "fs": "0.0.1-security",
     "moment": "^2.29.1",
     "moment-countdown": "0.0.3",
+    "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
     "node-gyp": "^7.1.2",
+    "node-schedule": "^2.0.0",
     "path": "^0.12.7",
     "request-promise": "^4.2.6"
   }
