@@ -27,7 +27,7 @@ var pool = mysql.createPool({
 var j = schedule.scheduleJob('*/18 * * * *', function(fireDate){
 
 
-  console.log('It has been one minute :)');
+ // console.log('It has been one minute :)');
  // connection.connect();
 
    pool.getConnection(function (err, connection) {
