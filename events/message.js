@@ -19,7 +19,7 @@ module.exports = (client, message) => {
 
     const perms = (cmd.getPermissions) ? cmd.getPermissions() : Permissions.defaultPermissions;
     
-    Permissions.checkPermissions(client, message, perms)
+    Permissions.checkPermissions(client, message, command, perms)
     .then((result) => {
         if (result) {
             // Run the command

@@ -12,15 +12,15 @@ exports.run = async (client, message, args) => {
 	const channelId = message.channel.id;
 	const command = args[0];
 
-	console.log("addcommandtochannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
+	console.log("removecommandfromchannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await PersistCommands.readFromDisk();
 
-	var currentChannelCommands = PersistCommands.getCommandList(commandData, guildId, channelId);
+	if (PersistCommands.isInCommandList(commandData, guildId, channelId, command)) {
+		var currentChannelCommands = PersistCommands.getCommandList(commandData, guildId, channelId);
 
-	if (currentChannelCommands.indexOf(command) === -1) {
-		currentChannelCommands.push(command);
+		currentChannelCommands.splice(currentChannelCommands.indexOf(command));
+	
+		await PersistCommands.writeToDisk(commandData);	
 	}
-
-	await PersistCommands.writeToDisk(commandData);
 };

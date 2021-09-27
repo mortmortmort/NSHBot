@@ -1,4 +1,5 @@
 const PersistBotAdmin = require("./persist/persist-botadmin.js");
+const PersistCommands = require("./persist/persist-commands.js");
 
 const UserPermissions = {
 	Public: 0,
@@ -21,7 +22,7 @@ module.exports.UserPermissions = UserPermissions;
 module.exports.ChannelPermissions = ChannelPermissions;
 module.exports.DefaultPermissions = DefaultPermissions;
 
-module.exports.checkPermissions = async (client, message, perms) => {
+module.exports.checkPermissions = async (client, message, command, perms) => {
 	async function checkUserPermissions(client, message, perms) {
 		switch (perms.User) {
 			case UserPermissions.Public:
@@ -41,13 +42,20 @@ module.exports.checkPermissions = async (client, message, perms) => {
 		};
 	};
 
-	async function checkChannelPermissions(client, message, perms) {
+	async function checkChannelPermissions(client, message, command, perms) {
 		switch (perms.Channel) {
 			case ChannelPermissions.All:
 				return true;
 
 			case ChannelPermissions.Limited:
-				return true;
+				const guildId = message.guild.id;
+				const channelId = message.channel.id;
+
+				const commandData = await PersistCommands.readFromDisk();
+				const inList = PersistCommands.isInCommandList(commandData, guildId, channelId, command);
+
+				console.log("PersistCommands = " + commandData + " guildId = " + guildId + " channelId = " + channelId + " inList = " + inList);
+				return inList;
 
 			case ChannelPermissions.None:
 				return false;
@@ -59,7 +67,7 @@ module.exports.checkPermissions = async (client, message, perms) => {
 	};
 
 	var userPerms = await checkUserPermissions(client, message, perms);
-	var channelPerms = await checkChannelPermissions(client, message, perms);
+	var channelPerms = await checkChannelPermissions(client, message, command, perms);
 
 	return userPerms && channelPerms;
 };
