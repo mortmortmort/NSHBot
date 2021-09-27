@@ -39,7 +39,6 @@ exports.run = async (client, message) => {
                 if (err) {
                   console.log(err);
                 } else {
-                  console.log(`CHARACTER NAME: ${row.char_name}\nBODY:${res.body[0]}\n\n\n`);
                   var trans = res.body;
                   trans.forEach((t, ind) => {
                     var a = moment(); //now
@@ -50,9 +49,7 @@ exports.run = async (client, message) => {
                     }
                     if (ind === trans.length - 1) {
                     superagent.get(`https://${process.env.EVE_ESI_URL}/latest/corporations/${response.body.corporation_id}/?datasource=tranquility`).end((err, corp) => {
-                      //console.log(`end of trans loop`)
                       var thirtyInc = bounties.reduce(sumArr,0)
-                      //console.log(thirtyInc);
                       income.push({
                         "corp_name": corp.body.name,
                         "corp_director": row.char_name,
@@ -62,9 +59,7 @@ exports.run = async (client, message) => {
                       })
                     
                       if (income.length === rows.length) {
-
                         const embed = new Discord.MessageEmbed()
-
                           .setFooter(`NSH Ratting Tax Calculator`)
                           .setDescription(`Work in Progress`)
                           .setColor('cc00cc')
@@ -73,8 +68,6 @@ exports.run = async (client, message) => {
                           var incRound = Math.round(corps.thirty_day_income);
                           var taxRound = Math.round(corps.tax);
                           var specRound = Math.round(corps.thirty_day_income * .3846);
-                          console.log(`${corps.tax} IS THE CORP TAX\n\n`)
-                          console.log(typeof corps.tax)
                           if (corps.corp_tax === 5) {
                             var taxOwed = incRound.toLocaleString();
                           } else if (corps.corp_tax === 10) {
@@ -82,22 +75,17 @@ exports.run = async (client, message) => {
                           } else if (corps.corp_tax === 13) {
                             var taxOwed = specRound.toLocaleString();
                           }
-                          console.log(taxOwed)
                           embed.addField(`Corp:\n${corps.corp_name} (${corps.corp_tax}% TAX)`, `**30 Day Income**: \n${incRound.toLocaleString()} ISK \n **ISK DUE**: \n${taxOwed} ISK`, true);
                           if (index === income.length - 1) {
                             console.log(`end of income loop`)
                             var totalIncome = 0
                             income.forEach((i,dex) => {
                               totalIncome = totalIncome + i.tax;
-
                               if (dex === income.length - 1) {
-                                 console.log(income);
                                  embed.setFooter(`Total 30 Day Alliance Income: ${Math.round(totalIncome).toLocaleString()} ISK `)
                                 message.reply(embed);
                               }
-                              
                             })
-                            
                           }
                         })
                       }
