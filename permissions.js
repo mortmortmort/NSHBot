@@ -1,5 +1,5 @@
 const PersistBotAdmin = require("./persist/persist-botadmin.js");
-const PersistCommands = require("./persist/persist-commands.js");
+const CommandPermsProcessor = require("./processors/command-perms.js");
 
 const UserPermissions = {
 	Public: 0,
@@ -48,14 +48,7 @@ module.exports.checkPermissions = async (client, message, command, perms) => {
 				return true;
 
 			case ChannelPermissions.Limited:
-				const guildId = message.guild.id;
-				const channelId = message.channel.id;
-
-				const commandData = await PersistCommands.readFromDisk();
-				const inList = PersistCommands.isInCommandList(commandData, guildId, channelId, command);
-
-				console.log("PersistCommands = " + commandData + " guildId = " + guildId + " channelId = " + channelId + " inList = " + inList);
-				return inList;
+				return CommandPermsProcessor.checkPermissions(message.guild.id, message.channel.id, command);
 
 			case ChannelPermissions.None:
 				return false;
