@@ -8,7 +8,7 @@ const _eyesData = [
 ];
 
 exports.getPermissions = (client, message, args) => {
-    return { User: Permissions.UserPermissions.ServerAdmin, Channel: Permissions.ChannelPermissions.Limited };
+    return { User: Permissions.UserPermissions.BotAdmin, Channel: Permissions.ChannelPermissions.Limited };
 };
 
 exports.run = async (client, message, args) => {    

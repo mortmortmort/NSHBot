@@ -1,3 +1,5 @@
+const PersistBotAdmin = require("./persist/persist-botadmin.js");
+
 const UserPermissions = {
 	Public: 0,
 	BotAdmin: 1,
@@ -19,15 +21,15 @@ module.exports.UserPermissions = UserPermissions;
 module.exports.ChannelPermissions = ChannelPermissions;
 module.exports.DefaultPermissions = DefaultPermissions;
 
-
-module.exports.checkPermissions = (client, message, perms) => {
-	function checkUserPermissions(client, message, perms) {
+module.exports.checkPermissions = async (client, message, perms) => {
+	async function checkUserPermissions(client, message, perms) {
 		switch (perms.User) {
 			case UserPermissions.Public:
 				return true;
 
 			case UserPermissions.BotAdmin:
-				return true;
+				const BotAdminData = await PersistBotAdmin.readFromDisk();
+				return message.member.roles.cache.has(BotAdminData.RoleId);
 
 			case UserPermissions.ServerAdmin:
 				return message.member.hasPermission("ADMINISTRATOR");
@@ -37,7 +39,7 @@ module.exports.checkPermissions = (client, message, perms) => {
 		};
 	};
 
-	function checkChannelPermissions(client, message, perms) {
+	async function checkChannelPermissions(client, message, perms) {
 		switch (perms.Channel) {
 			case ChannelPermissions.All:
 				return true;
@@ -54,5 +56,5 @@ module.exports.checkPermissions = (client, message, perms) => {
 		};
 	};
 
-	return checkUserPermissions(client, message, perms) && checkUserPermissions(client, message, perms);
+	return checkUserPermissions(client, message, perms) && checkChannelPermissions(client, message, perms);
 };

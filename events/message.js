@@ -19,11 +19,13 @@ module.exports = (client, message) => {
 
     const perms = (cmd.getPermissions) ? cmd.getPermissions() : Permissions.defaultPermissions;
     
-    if (Permissions.checkPermissions(client, message, perms)) {
-        // Run the command
-        cmd.run(client, message, args);
-    } else {
-        console.log("command did not meet permission requirements");
-    }
-
+    Permissions.checkPermissions(client, message, perms)
+    .then((result) => {
+        if (result) {
+            // Run the command
+            cmd.run(client, message, args);
+        } else {
+            console.log("command did not meet permission requirements");
+        }    
+    })
   };
