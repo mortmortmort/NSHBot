@@ -1,4 +1,5 @@
 const PersistUtil = require("../persist/persist-util.js");
+const DebugProcessor = require("../processors/debug.js");
 
 const FILENAME = "commands.json";
 
@@ -52,7 +53,7 @@ module.exports.addCommandToChannel = async (client, message, command) => {
     const guildId = message.guild.id;
     const channelId = message.channel.id;
 
-	console.log("addCommandToChannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
+	DebugProcessor.logMessageTrace(client, message,"addCommandToChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
 
@@ -71,7 +72,7 @@ module.exports.removeCommandFromChannel = async (client, message, command) => {
     const guildId = message.guild.id;
     const channelId = message.channel.id;
     
-	console.log("removeCommandFromChannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
+	DebugProcessor.logMessageTrace(client, message, "removeCommandFromChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
 
