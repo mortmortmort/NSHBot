@@ -123,10 +123,13 @@ module.exports.eyesCommand = async (client, message, args) => {
 
         client.on('messageReactionAdd', (reaction, user) => {
             if (user.bot) return;
+
+            var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
+            var displayName = gmUser.displayName;
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    systemData.currentEyes.push(message.member.displayName);
+                    systemData.currentEyes.push(displayName);
                     targetMessage.edit(generateMessageText(eyesData));
                 }
             });
@@ -134,10 +137,13 @@ module.exports.eyesCommand = async (client, message, args) => {
         
         client.on('messageReactionRemove', (reaction, user) => {
             if (user.bot) return;
+
+            var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
+            var displayName = gmUser.displayName;
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === message.member.displayName));
+                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === displayName));
                     targetMessage.edit(generateMessageText(eyesData));
                 }
             });
