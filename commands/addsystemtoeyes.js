@@ -1,12 +1,12 @@
 const Permissions = require("../permissions.js");
-const CommandPermsProcessor = require("../processors/command-perms.js");
+const EyesProcessor = require("../processors/eyes.js");
 
 exports.getPermissions = () => {
     return { User: Permissions.UserPermissions.BotAdmin, Channel: Permissions.ChannelPermissions.All };
 };
 
 exports.run = async (client, message, args) => {  
-	if (args === undefined || args.length !== 1) return;
+	if (args === undefined || args.length !== 2) return;
 
-	return CommandPermsProcessor.removeCommandFromChannel(message.guild.id,  message.channel.id, args[0]);
+	return EyesProcessor.addSystemToEyes(args[0], args[1]);
 };

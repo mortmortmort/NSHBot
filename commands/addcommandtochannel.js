@@ -1,7 +1,7 @@
 const Permissions = require("../permissions.js");
 const CommandPermsProcessor = require("../processors/command-perms.js");
 
-exports.getPermissions = (client, message, args) => {
+exports.getPermissions = () => {
     return { User: Permissions.UserPermissions.BotAdmin, Channel: Permissions.ChannelPermissions.All };
 };
 
