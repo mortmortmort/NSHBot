@@ -8,6 +8,5 @@ exports.getPermissions = (client, message, args) => {
 exports.run = async (client, message, args) => {    
     if (args === undefined || args.length !== 1) return;
 
-    const roleMention = args[0];
-    return BotAdminProcessor.setBotAdmin(message, roleMention);
+    return BotAdminProcessor.setBotAdmin(message, args[0]);
 };
