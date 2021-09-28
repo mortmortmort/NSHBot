@@ -2,7 +2,7 @@ const Permissions = require("../permissions.js");
 const DebugProcessor = require("../processors/debug.js");
 
 exports.getPermissions = () => {
-    return { User: Permissions.UserPermissions.ServerAdmin, Channel: Permissions.ChannelPermissions.All };
+    return { User: Permissions.UserPermissions.BotAdmin, Channel: Permissions.ChannelPermissions.All };
 };
 
 exports.run = async (client, message, args) => {    
