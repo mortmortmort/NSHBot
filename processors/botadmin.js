@@ -1,4 +1,5 @@
 const PersistUtil = require("../persist/persist-util.js");
+const DebugProcessor = require("../processors/debug.js");
 
 const FILENAME = "commands.json";
 
@@ -21,7 +22,7 @@ function createDefaultBotAdminData() {
 }
 
 module.exports.setBotAdmin = async (client, message, roleMention) => {
-    console.log("setBotAdmin invoked. roleMention = " + roleMention);
+    DebugProcessor.logMessageTrace(client, message, "setBotAdmin() invoked. roleMention = " + roleMention);
 
     if (roleMention.startsWith("<@&") && roleMention.endsWith(">")) {
         let botAdminRole = message.guild.roles.cache.get(roleMention.slice(3, -1));
@@ -30,11 +31,11 @@ module.exports.setBotAdmin = async (client, message, roleMention) => {
             const data = makeBotAdminData(botAdminRole.id);
             await writeToDisk(data);
     
-            console.log("setBotAdmin() - successfully updated botAdminData to: " + JSON.stringify(data));
+            DebugProcessor.logMessageTrace(client, message, "setBotAdmin() - successfully updated botAdminData to: " + JSON.stringify(data));
             message.channel.send(`${message.author}: Successfully set ${roleMention} as BotAdmin`);
         }            
     } else {
-        console.log("setBotAdmin() - unexpected role mention = '" + targetRoleMention + "'");
+        DebugProcessor.logMessageError(client, message, "setBotAdmin() - unexpected role mention = '" + roleMention + "'");
     }
 };
 

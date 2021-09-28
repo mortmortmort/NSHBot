@@ -1,4 +1,5 @@
 const Permissions = require("../permissions.js");
+const DebugProcessor = require("../processors/debug.js");
 
 module.exports = (client, message) => {
     // Ignore all bots
@@ -23,7 +24,20 @@ module.exports = (client, message) => {
     .then((result) => {
         if (result) {
             // Run the command
-            cmd.run(client, message, args);
+            try {
+                cmd.run(client, message, args)
+                .catch((ex) => {
+                    DebugProcessor.logMessageError(client, message, 
+                        `Exception caught trying to execute '${command}' with args = '${args}'. 
+                        Exception text = '${ex}'
+                        Exception stack = '${ex.stack}'`); 
+                });
+            } catch (ex) {
+                DebugProcessor.logMessageError(client, message, 
+                    `Exception caught trying to execute '${command}' with args = '${args}'. 
+                    Exception text = '${ex}'
+                    Exception stack = '${ex.stack}'`);
+            };            
         } else {
             console.log("command did not meet permission requirements");
         }    

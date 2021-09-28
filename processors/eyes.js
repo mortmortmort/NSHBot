@@ -1,4 +1,5 @@
 const PersistUtil = require("../persist/persist-util.js");
+const DebugProcessor = require("../processors/debug.js");
 
 const FILENAME = "eyes.json";
 
@@ -46,7 +47,7 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
 
     const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
 
-    console.log("addCommandToChannel invoked. systemName = " + systemName + " emoji = " + emoji + " emojiName = " + emojiName);
+    DebugProcessor.logMessageTrace(client, message,"addCommandToChannel invoked. systemName = " + systemName + " emoji = " + emoji + " emojiName = " + emojiName);
 
     if (!validateSystemData(systemName, emojiName))
         return;
@@ -74,7 +75,7 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
 };
 
 module.exports.removeSystemFromEyes = async (client, message, systemName) => {
-    console.log("removeSystemFromEyes invoked. systemName = " + systemName);
+    DebugProcessor.logMessageTrace(client, message,"removeSystemFromEyes invoked. systemName = " + systemName);
 
 	var eyesData = await readFromDisk();
     
@@ -103,6 +104,8 @@ function generateMessageText(eyesData) {
 }
 
 module.exports.eyesCommand = async (client, message, args) => {
+    DebugProcessor.logMessageTrace(client, message, "eyesCommand() invoked");
+
     // Deep copy
     const eyesDataOnDisk = await readFromDisk();
     var eyesData = JSON.parse(JSON.stringify(eyesDataOnDisk));
@@ -120,10 +123,13 @@ module.exports.eyesCommand = async (client, message, args) => {
 
         client.on('messageReactionAdd', (reaction, user) => {
             if (user.bot) return;
+
+            var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
+            var displayName = gmUser.displayName;
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    systemData.currentEyes.push(message.member.displayName);
+                    systemData.currentEyes.push(displayName);
                     targetMessage.edit(generateMessageText(eyesData));
                 }
             });
@@ -131,10 +137,13 @@ module.exports.eyesCommand = async (client, message, args) => {
         
         client.on('messageReactionRemove', (reaction, user) => {
             if (user.bot) return;
+
+            var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
+            var displayName = gmUser.displayName;
             
             eyesData.forEach(systemData => {
                 if (reaction.emoji.name === systemData.emojiIcon.name) {
-                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === message.member.displayName));
+                    systemData.currentEyes = systemData.currentEyes.filter(item => !(item === displayName));
                     targetMessage.edit(generateMessageText(eyesData));
                 }
             });

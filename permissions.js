@@ -56,6 +56,10 @@ module.exports.checkPermissions = async (client, message, command, perms) => {
 		};
 	};
 
+	if (perms === undefined) {
+		perms = DefaultPermissions;
+	}
+
 	var userPerms = await checkUserPermissions(client, message, perms);
 	var channelPerms = await checkChannelPermissions(client, message, command, perms);
 
