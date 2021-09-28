@@ -1,4 +1,4 @@
-const PersistBotAdmin = require("./persist/persist-botadmin.js");
+const BotAdminProcessor = require("./processors/botadmin.js");
 const CommandPermsProcessor = require("./processors/command-perms.js");
 
 const UserPermissions = {
@@ -29,10 +29,7 @@ module.exports.checkPermissions = async (client, message, command, perms) => {
 				return true;
 
 			case UserPermissions.BotAdmin:
-				const BotAdminData = await PersistBotAdmin.readFromDisk();
-				const hasRole = message.member.roles.cache.has(BotAdminData.RoleId);
-				console.log("BotAdminData.RoleId = " + BotAdminData.RoleId + " hasRole = " + hasRole);
-				return hasRole;
+				return BotAdminProcessor.checkPermissions(message);
 
 			case UserPermissions.ServerAdmin:
 				return message.member.hasPermission("ADMINISTRATOR");
