@@ -1,12 +1,12 @@
 const Discord = require("discord.js");
 const Enmap = require("enmap");
-const fs = require("fs");
+const FS = require("fs");
 const config = require("./config.json");
 const path = require("path");
 
 function getDiscordToken() {
-  if (fs.existsSync("./discord.token")) {
-    const data = fs.readFileSync("./discord.token");
+  if (FS.existsSync("./secrets/discord.token")) {
+    const data = FS.readFileSync("./secrets/discord.token");
   
     if (data && data !== undefined) {
       return data.toString().trim();
@@ -17,15 +17,15 @@ function getDiscordToken() {
     return process.env.DISCORD_TOKEN;
   }
   
-  throw "Unable to find Discord Bot Token. Check './discord.token' or the DISCORD_TOKEN ENV variable";
+  throw "Unable to find Discord Bot Token. Check './secrets/discord.token' or the DISCORD_TOKEN ENV variable";
 }
 
 function recursive(dir, result = []) {
   // list files in directory and loop through
-  fs.readdirSync(dir).forEach(file => {
+  FS.readdirSync(dir).forEach(file => {
     // builds full path of file
     const fPath = path.resolve(dir, file);
-    if (fs.statSync(fPath).isDirectory()) {
+    if (FS.statSync(fPath).isDirectory()) {
       recursive(fPath, result);
     }
     result.push(fPath);
@@ -34,7 +34,7 @@ function recursive(dir, result = []) {
 
 function initEvents(client) {
   // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-  fs.readdir("./events/", (err, files) => {
+  FS.readdir("./events/", (err, files) => {
     if (err) return console.error(err);
     files.forEach(file => {
       if (!file.endsWith(".js")) return;
