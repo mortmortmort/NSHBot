@@ -3,6 +3,67 @@ const Enmap = require("enmap");
 const FS = require("fs");
 const config = require("./config.json");
 const path = require("path");
+require('dotenv').config()
+var schedule = require('node-schedule');
+const superagent = require('superagent');
+
+//Handle Tokens
+var mysql      = require('mysql');
+var pool = mysql.createPool({
+  connectionLimit: 10,
+  host     : process.env.DB_HOST,
+  user     : process.env.DB_USER,
+  password : process.env.DB_PASSWORD,
+  database : process.env.DB_NAME
+});
+
+
+
+
+
+
+
+
+var j = schedule.scheduleJob('*/18 * * * *', function(fireDate){
+
+
+ // console.log('It has been one minute :)');
+ // connection.connect();
+
+   pool.getConnection(function (err, connection) {
+     if (err) throw err;
+        connection.query("SELECT * FROM users", function (err, rows) {
+            connection.release();
+            if (err) throw err;
+rows.forEach((row) => {
+
+  superagent
+      .post('https://login.eveonline.com/v2/oauth/token')
+      .send({ grant_type: 'refresh_token', refresh_token: row.refresh_token, scope: 'publicData esi-calendar.read_calendar_events.v1 esi-wallet.read_character_wallet.v1 esi-corporations.read_corporation_membership.v1 esi-corporations.read_structures.v1 esi-characters.read_corporation_roles.v1 esi-killmails.read_corporation_killmails.v1 esi-corporations.track_members.v1 esi-wallet.read_corporation_wallets.v1 esi-corporations.read_divisions.v1 esi-corporations.read_contacts.v1 esi-assets.read_corporation_assets.v1 esi-corporations.read_titles.v1 esi-corporations.read_blueprints.v1 esi-bookmarks.read_corporation_bookmarks.v1 esi-contracts.read_corporation_contracts.v1 esi-corporations.read_standings.v1 esi-corporations.read_starbases.v1 esi-industry.read_corporation_jobs.v1 esi-markets.read_corporation_orders.v1 esi-corporations.read_container_logs.v1 esi-industry.read_corporation_mining.v1 esi-planets.read_customs_offices.v1 esi-corporations.read_facilities.v1 esi-corporations.read_medals.v1 esi-corporations.read_fw_stats.v1' }) // sends a JSON post body
+      .set('Content-Type', 'application/x-www-form-urlencoded')
+      .set('Host', 'login.eveonline.com')
+      .set('Authorization', `Basic ${process.env.EVE_AUTH_TOKEN}`)
+      .end(function (err, res) {
+               pool.getConnection(function (err, connection) {
+                   connection.query(`UPDATE users SET access_token = ? WHERE char_name = '${row.char_name}'`,[res.body.access_token], function (err, res, fields) {
+                   connection.release();
+                   if (err) throw err;
+                    });
+              });
+      });
+
+            console.log(row.char_name);
+
+})
+
+        });
+    });
+
+
+
+});
+
+//Handle Commands
 
 function getDiscordToken() {
   if (FS.existsSync("./secrets/discord.token")) {
