@@ -8,5 +8,5 @@ exports.getPermissions = () => {
 exports.run = async (client, message, args) => {  
 	if (args === undefined || args.length !== 1) return;
 
-	return EyesProcessor.removeSystemFromEyes(args[0]);
+	return EyesProcessor.removeSystemFromEyes(client, message, args[0]);
 };

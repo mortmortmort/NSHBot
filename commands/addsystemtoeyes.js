@@ -8,5 +8,5 @@ exports.getPermissions = () => {
 exports.run = async (client, message, args) => {  
 	if (args === undefined || args.length !== 2) return;
 
-	return EyesProcessor.addSystemToEyes(args[0], args[1]);
+	return EyesProcessor.addSystemToEyes(client, message, args[0], args[1]);
 };

@@ -8,5 +8,5 @@ exports.getPermissions = () => {
 exports.run = async (client, message, args) => {  
 	if (args === undefined || args.length !== 1) return;
 
-	return CommandPermsProcessor.addCommandToChannel( message.guild.id, message.channel.id, args[0]);
+	return CommandPermsProcessor.addCommandToChannel(client, message, args[0]);
 };

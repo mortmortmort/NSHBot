@@ -8,5 +8,5 @@ exports.getPermissions = () => {
 exports.run = async (client, message, args) => {  
 	if (args === undefined || args.length !== 1) return;
 
-	return CommandPermsProcessor.removeCommandFromChannel(message.guild.id,  message.channel.id, args[0]);
+	return CommandPermsProcessor.removeCommandFromChannel(client, message, args[0]);
 };

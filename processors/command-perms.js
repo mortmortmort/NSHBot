@@ -48,7 +48,10 @@ function isInCommandList(commandData, guildId, channelId, command) {
     return true;
 };
 
-module.exports.addCommandToChannel = async (guildId, channelId, command) => {
+module.exports.addCommandToChannel = async (client, message, command) => {
+    const guildId = message.guild.id;
+    const channelId = message.channel.id;
+
 	console.log("addCommandToChannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
@@ -60,9 +63,14 @@ module.exports.addCommandToChannel = async (guildId, channelId, command) => {
 	}
 
 	await writeToDisk(commandData);
+
+    message.channel.send(`${message.author}: Successfully added '${client.config.prefix}${command}' access to this channel`);
 };
 
-module.exports.removeCommandFromChannel = async (guildId, channelId, command) => {
+module.exports.removeCommandFromChannel = async (client, message, command) => {
+    const guildId = message.guild.id;
+    const channelId = message.channel.id;
+    
 	console.log("removeCommandFromChannel invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
@@ -73,6 +81,8 @@ module.exports.removeCommandFromChannel = async (guildId, channelId, command) =>
 		currentChannelCommands.splice(currentChannelCommands.indexOf(command));
 	
 		await writeToDisk(commandData);	
+
+        message.channel.send(`${message.author}: Successfully removed '${client.config.prefix}${command}' access from this channel`);
 	}
 };
 

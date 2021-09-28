@@ -32,7 +32,7 @@ function createDefaultEyesData() {
     return makeEyesData();
 }
 
-module.exports.addSystemToEyes = async (systemName, emoji) => {
+module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
     var emojiName;
     if (emoji.startsWith("<") && emoji.endsWith(">")) {
         // this is an emoji, format: '<:really:889720025915744286>'
@@ -44,6 +44,8 @@ module.exports.addSystemToEyes = async (systemName, emoji) => {
         emojiName = emoji;
     }
 
+    const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+
     console.log("addCommandToChannel invoked. systemName = " + systemName + " emoji = " + emoji + " emojiName = " + emojiName);
 
     if (!validateSystemData(systemName, emojiName))
@@ -51,18 +53,27 @@ module.exports.addSystemToEyes = async (systemName, emoji) => {
 
 	var eyesData = await readFromDisk();
     
+    if (eyesData.some(element => element.emojiName === emojiName)) {
+        message.channel.send(`${message.author}: Error - ${emojiIcon} already in use`);
+        return;
+    }
+
     const systemData = eyesData.find(element => element.systemName === systemName);
 
     if (systemData === undefined) {
         eyesData.push(makeSystemData(systemName, emojiName));
         await writeToDisk(eyesData);
+
+        message.channel.send(`${message.author}: Successfully added '${systemName}' to list with ${emojiIcon}`);
     } else {
         systemData.emojiName = emojiName;
         await writeToDisk(eyesData);
+
+        message.channel.send(`${message.author}: Successfully updated '${systemName}' emoji to ${emojiIcon}`);
     }
 };
 
-module.exports.removeSystemFromEyes = async (systemName) => {
+module.exports.removeSystemFromEyes = async (client, message, systemName) => {
     console.log("removeSystemFromEyes invoked. systemName = " + systemName);
 
 	var eyesData = await readFromDisk();
@@ -72,6 +83,8 @@ module.exports.removeSystemFromEyes = async (systemName) => {
     if (index !== -1) {
         eyesData.splice(index, 1);       
         await writeToDisk(eyesData);
+
+        message.channel.send(`${message.author}: Successfully removed '${systemName}' from list`);
     }
 };
 
