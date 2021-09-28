@@ -160,8 +160,10 @@ module.exports.eyesCommand = async (client, message, args) => {
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
             var displayName = gmUser.displayName;
             
+            var emojiName = (reaction.emoji.id !== null) ? reaction.emoji.name : EmojiUnicodeMap.get(reaction.emoji.name);
+
             eyesData.forEach(systemData => {
-                if (reaction.emoji.name === systemData.emojiIcon.name) {
+                if (emojiName === systemData.emojiName) {
                     systemData.currentEyes.push(displayName);
                     targetMessage.edit(generateMessageText(eyesData));
                 }
@@ -173,9 +175,11 @@ module.exports.eyesCommand = async (client, message, args) => {
 
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
             var displayName = gmUser.displayName;
+
+            var emojiName = (reaction.emoji.id !== null) ? reaction.emoji.name : EmojiUnicodeMap.get(reaction.emoji.name);
             
             eyesData.forEach(systemData => {
-                if (reaction.emoji.name === systemData.emojiIcon.name) {
+                if (emojiName === systemData.emojiName) {
                     systemData.currentEyes = systemData.currentEyes.filter(item => !(item === displayName));
                     targetMessage.edit(generateMessageText(eyesData));
                 }
