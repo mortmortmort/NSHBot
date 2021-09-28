@@ -1,7 +1,7 @@
 const PersistUtil = require("../persist/persist-util.js");
 const DebugProcessor = require("../processors/debug.js");
 
-const FILENAME = "commands.json";
+const FILENAME = "botadmin.json";
 
 async function readFromDisk() {
     return PersistUtil.readFromDisk(FILENAME, createDefaultBotAdminData);
