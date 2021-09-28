@@ -92,7 +92,7 @@ async function logMessageDebug(client, message, text) {
         messageDebugChannel(debugData, client, message, text);
     }
 
-    //console.log(text);
+    console.log(text);
 }
 
 async function logMessageTrace(client, message, text) {
@@ -104,7 +104,7 @@ async function logMessageTrace(client, message, text) {
         messageDebugChannel(debugData, client, message, text);
     }
 
-    //console.log(text);
+    console.log(text);
 }
 
 

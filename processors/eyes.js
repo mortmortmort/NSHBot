@@ -1,5 +1,7 @@
 const PersistUtil = require("../persist/persist-util.js");
 const DebugProcessor = require("../processors/debug.js");
+const EmojiNameMap = require("emoji-name-map");
+const EmojiUnicodeMap = require("emoji-unicode-map");
 
 const FILENAME = "eyes.json";
 
@@ -33,21 +35,52 @@ function createDefaultEyesData() {
     return makeEyesData();
 }
 
+function getEmojiIconFromEmojiName(message, emojiName) {
+    const customEmojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+
+    if (customEmojiIcon) {
+        return customEmojiIcon;
+    }
+
+    const unicodeEmojiIcon = EmojiNameMap.get(emojiName);
+
+    if (unicodeEmojiIcon) {
+        return unicodeEmojiIcon;
+    }
+
+    console.log(`ERROR: Unable to retrieve emoji for emojiName = ${emojiName}`);
+}
+
 module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
     var emojiName;
     if (emoji.startsWith("<") && emoji.endsWith(">")) {
-        // this is an emoji, format: '<:really:889720025915744286>'
+        // this is a custom emoji, format: '<:really:889720025915744286>'
         var i1 = emoji.indexOf(':') + 1;
         var i2 = emoji.indexOf(':', i1);
 
         emojiName = emoji.slice(i1, i2);
+
+        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+
+        if (emojiIcon === undefined) {
+            DebugProcessor.logMessageError(client, message, `addSystemToEyes() - unable to find icon for emoji '${emoji}'`);
+            return;
+        }        
     } else {
-        emojiName = emoji;
+        var unicodeEmoji = EmojiUnicodeMap.get(emoji);
+
+        if (unicodeEmoji === undefined) {
+            DebugProcessor.logMessageError(client, message, `addSystemToEyes() - unexpected emoji '${emoji}'`);
+            return;
+        }
+
+        emojiName = unicodeEmoji;
     }
 
-    const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+   
+    const emojiIcon = getEmojiIconFromEmojiName(message, emojiName);
 
-    DebugProcessor.logMessageTrace(client, message,"addCommandToChannel invoked. systemName = " + systemName + " emoji = " + emoji + " emojiName = " + emojiName);
+    DebugProcessor.logMessageTrace(client, message, `addSystemToEyes() invoked. systemName = ${systemName}, emoji = ${emoji}, emojiName = ${emojiName}, emojiIcon = ${emojiIcon}`);
 
     if (!validateSystemData(systemName, emojiName))
         return;
@@ -111,7 +144,7 @@ module.exports.eyesCommand = async (client, message, args) => {
     var eyesData = JSON.parse(JSON.stringify(eyesDataOnDisk));
         
     eyesData.forEach(systemData => {
-        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
+        const emojiIcon = getEmojiIconFromEmojiName(message, systemData.emojiName);
         systemData["emojiIcon"] = emojiIcon;        
         systemData["currentEyes"] = [];
     });    
