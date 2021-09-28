@@ -155,6 +155,8 @@ module.exports.eyesCommand = async (client, message, args) => {
         eyesData.forEach(systemData => targetMessage.react(systemData.emojiIcon));
 
         client.on('messageReactionAdd', (reaction, user) => {
+            if (reaction.message.id !== targetMessage.id) return;
+
             if (user.bot) return;
 
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
@@ -171,6 +173,8 @@ module.exports.eyesCommand = async (client, message, args) => {
         });
         
         client.on('messageReactionRemove', (reaction, user) => {
+            if (reaction.message.id !== targetMessage.id) return;
+
             if (user.bot) return;
 
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
