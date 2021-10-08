@@ -1,12 +1,14 @@
-const Discord = require("discord.js");
-const Enmap = require("enmap");
-const FS = require("fs");
-const config = require("./config.json");
-const path = require("path");
+'use strict';
+
+import { Client } from "discord.js";
+import { default as Enmap }  from "enmap";
+import { existsSync, readFileSync, readdirSync, statSync, readdir } from "fs";
+const config = import("./config.json");
+import * as path from "path";
 
 function getDiscordToken() {
-  if (FS.existsSync("./secrets/discord.token")) {
-    const data = FS.readFileSync("./secrets/discord.token");
+  if (existsSync("./secrets/discord.token")) {
+    const data = readFileSync("./secrets/discord.token");
   
     if (data && data !== undefined) {
       return data.toString().trim();
@@ -22,10 +24,10 @@ function getDiscordToken() {
 
 function recursive(dir, result = []) {
   // list files in directory and loop through
-  FS.readdirSync(dir).forEach(file => {
+  readdirSync(dir).forEach(file => {
     // builds full path of file
     const fPath = path.resolve(dir, file);
-    if (FS.statSync(fPath).isDirectory()) {
+    if (statSync(fPath).isDirectory()) {
       recursive(fPath, result);
     }
     result.push(fPath);
@@ -34,7 +36,7 @@ function recursive(dir, result = []) {
 
 function initEvents(client) {
   // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-  FS.readdir("./events/", (err, files) => {
+  readdir("./events/", (err, files) => {
     if (err) return console.error(err);
     files.forEach(file => {
       if (!file.endsWith(".js")) return;
@@ -53,6 +55,7 @@ function initCommands(client) {
     if (!file.endsWith(".js")) {
       return;
     }
+    
     let props = require(file);
     let commandName = path.parse(file).name;
     console.log(`Attempting to load command ${commandName}`);
@@ -75,8 +78,9 @@ function initRelays() {
 }
 
 function init() {
-  const client = new Discord.Client();
+  const client = new Client();
   const discord_token = getDiscordToken();
+
   client.config = config;
   client.commands = new Enmap();
   

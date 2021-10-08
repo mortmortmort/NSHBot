@@ -36,46 +36,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var fs_1 = require("fs");
-var DATA_PATH = "./data/";
-function readFromDisk(filename, defaultFunctor) {
+var debug_js_1 = require("../processors/debug.js");
+var FILENAME = "eyes2.json";
+function eyesCommand(client, message, args) {
     return __awaiter(this, void 0, void 0, function () {
-        var path, buffer, ex_1, defaultData;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 2, , 3]);
-                    path = DATA_PATH + filename;
-                    return [4 /*yield*/, fs_1.promises.readFile(path)];
-                case 1:
-                    buffer = _a.sent();
-                    return [2 /*return*/, JSON.parse(buffer.toString())];
-                case 2:
-                    ex_1 = _a.sent();
-                    defaultData = defaultFunctor();
-                    return [2 /*return*/, defaultData];
-                case 3: return [2 /*return*/];
-            }
+            debug_js_1.DebugProcessor.logMessageTrace(client, message, "eyesCommand() invoked with args = '" + args);
+            return [2 /*return*/];
         });
     });
 }
-exports.readFromDisk = readFromDisk;
-;
-function writeToDisk(filename, data) {
+exports.eyesCommand = eyesCommand;
+function eyesConfigCommand(client, message, args) {
     return __awaiter(this, void 0, void 0, function () {
-        var path, buffer;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    path = DATA_PATH + filename;
-                    buffer = JSON.stringify(data);
-                    return [4 /*yield*/, fs_1.promises.writeFile(path, buffer)];
-                case 1:
-                    _a.sent();
-                    return [2 /*return*/];
-            }
+            debug_js_1.DebugProcessor.logMessageTrace(client, message, "eyesConfigCommand() invoked with args = '" + args);
+            if (args === undefined || args.length === 0)
+                return [2 /*return*/];
+            return [2 /*return*/];
         });
     });
 }
-exports.writeToDisk = writeToDisk;
-;
+exports.eyesConfigCommand = eyesConfigCommand;
