@@ -1,8 +1,9 @@
-const Discord = require("discord.js");
+import * as FS from "fs";
+import * as path from "path";
+import { BotClient } from "./botclient.js";
+
 const Enmap = require("enmap");
-const FS = require("fs");
 const config = require("./config.json");
-const path = require("path");
 
 function getDiscordToken() {
   if (FS.existsSync("./secrets/discord.token")) {
@@ -20,7 +21,7 @@ function getDiscordToken() {
   throw "Unable to find Discord Bot Token. Check './secrets/discord.token' or the DISCORD_TOKEN ENV variable";
 }
 
-function recursive(dir, result = []) {
+function recursive(dir: string, result: string[] = []) {
   // list files in directory and loop through
   FS.readdirSync(dir).forEach(file => {
     // builds full path of file
@@ -32,7 +33,7 @@ function recursive(dir, result = []) {
   });
 };
 
-function initEvents(client) {
+function initEvents(client: BotClient) {
   // This loop reads the /events/ folder and attaches each event file to the appropriate event.
   FS.readdir("./events/", (err, files) => {
     if (err) return console.error(err);
@@ -46,8 +47,8 @@ function initEvents(client) {
   });
 }
 
-function initCommands(client) {
-  let files = [];
+function initCommands(client: BotClient) {
+  let files: string[] = [];
   recursive("./commands/", files);
   files.forEach(file => {
     if (!file.endsWith(".js")) {
@@ -61,7 +62,7 @@ function initCommands(client) {
 }
 
 function initRelays() {
-  let relays = [];
+  let relays: string[] = [];
   recursive("./relays/", relays);
   relays.forEach(relay => {
     if (!relay.endsWith(".js")) {
@@ -75,10 +76,9 @@ function initRelays() {
 }
 
 function init() {
-  const client = new Discord.Client();
+  const client = new BotClient();
   const discord_token = getDiscordToken();
   client.config = config;
-  client.commands = new Enmap();
   
   initEvents(client);
   initCommands(client);
