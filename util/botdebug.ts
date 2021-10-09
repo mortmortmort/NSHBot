@@ -54,7 +54,7 @@ export class BotDebug {
         if (debugChannel !== undefined) {
             if (debugChannel.guild.id !== this._botConfig.debugGuildId) return;
     
-            debugChannel.send(text);
+            await debugChannel.send(text);
         }
     }
 

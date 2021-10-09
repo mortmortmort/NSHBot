@@ -2,7 +2,7 @@ import JSONFile from "jsonfile";
 
 import { DebugLevel } from "../types/debugtypes";
 
-type BotConfigAsJSON = {
+type BotConfigData = {
     debugLevel: DebugLevel;
     debugGuildId: string;
     debugChannelId: string;
@@ -11,36 +11,27 @@ type BotConfigAsJSON = {
 export class BotConfig {
     private static readonly DATAFILE = "./data/botconfig.json";
 
-    private _debugLevel: DebugLevel;
-    private _debugGuildId: string;
-    private _debugChannelId: string;
-
+    private _data: BotConfigData;
 
     constructor() {
-        this._debugLevel = DebugLevel.OFF;
-        this._debugGuildId = "";
-        this._debugChannelId = "";
-    }
-
-    private serializeToJSON(): BotConfigAsJSON {
-        return {
-            debugLevel:     this._debugLevel,
-            debugGuildId:   this._debugGuildId,
-            debugChannelId: this._debugChannelId
-        }
+        this._data = {
+            debugLevel:     DebugLevel.OFF,
+            debugGuildId:   "",
+            debugChannelId: ""
+        };
     }
 
     private setValuesFromJSON(data: any) {
         if (data.hasOwnProperty("debugLevel")) {
-            this._debugLevel = data.debugLevel;
+            this._data.debugLevel = data.debugLevel;
         }
         
         if (data.hasOwnProperty("debugGuildId")) {
-            this._debugGuildId = data.debugGuildId;
+            this._data.debugGuildId = data.debugGuildId;
         }
         
         if (data.hasOwnProperty("debugChannelId")) {
-            this._debugChannelId = data.debugChannelId;
+            this._data.debugChannelId = data.debugChannelId;
         }        
     }
 
@@ -58,37 +49,36 @@ export class BotConfig {
 
     async writeToDisk(): Promise<void> {
         try {
-            const data = this.serializeToJSON();
-            await JSONFile.writeFile(BotConfig.DATAFILE, data);
+            await JSONFile.writeFile(BotConfig.DATAFILE, this._data);
 
-            console.log("BotConfig::writeToDisk() ==> data = ", data);
+            console.log("BotConfig::writeToDisk() ==> data = ", this._data);
         } catch (ex) {
             console.log(ex);
         }
     }
 
     get debugLevel(): DebugLevel {
-        return this._debugLevel;
+        return this._data.debugLevel;
     }
 
     set debugLevel(debugLevel: DebugLevel) {
-        this._debugLevel = debugLevel;
+        this._data.debugLevel = debugLevel;
     }    
 
     get debugGuildId(): string {
-        return this._debugGuildId;
+        return this._data.debugGuildId;
     }
 
     set debugGuildId(debugGuildId: string) {
-        this._debugGuildId = debugGuildId;
+        this._data.debugGuildId = debugGuildId;
     }    
 
     get debugChannelId(): string {
-        return this._debugChannelId;
+        return this._data.debugChannelId;
     }
 
     set debugChannelId(debugChannelId: string) {
-        this._debugChannelId = debugChannelId;
+        this._data.debugChannelId = debugChannelId;
     }
 
 }
