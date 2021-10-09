@@ -1,4 +1,3 @@
-const BotAdminProcessor = require("./processors/botadmin.js");
 const CommandPermsProcessor = require("./processors/command-perms.js");
 
 const UserPermissions = {
@@ -29,7 +28,7 @@ module.exports.checkPermissions = async (client, message, command, perms) => {
 				return true;
 
 			case UserPermissions.BotAdmin:
-				return /*message.member.hasPermission("ADMINISTRATOR") ||*/ BotAdminProcessor.checkPermissions(client, message);
+				return message.member.hasPermission("ADMINISTRATOR") || message.member.roles.cache.has(client.botConfig.botAdminRoleId);
 
 			case UserPermissions.ServerAdmin:
 				return message.member.hasPermission("ADMINISTRATOR");

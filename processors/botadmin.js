@@ -1,6 +1,3 @@
-const PersistUtil = require("../persist/persist-util.js");
-
-
 module.exports.setBotAdmin = async (client, message, roleMention) => {
     client.debug.logTrace("setBotAdmin() invoked. roleMention = " + roleMention);
 
@@ -17,7 +14,3 @@ module.exports.setBotAdmin = async (client, message, roleMention) => {
         client.debug.logError("setBotAdmin() - unexpected role mention = '" + roleMention + "'");
     }
 };
-
-module.exports.checkPermissions = async (client, message) => {
-    return message.member.roles.cache.has(client.botConfig.botAdminRoleId);
-}
