@@ -1,25 +1,5 @@
 const PersistUtil = require("../persist/persist-util.js");
-const DebugProcessor = require("../processors/debug.js");
 
-const FILENAME = "botadmin.json";
-
-async function readFromDisk() {
-    return PersistUtil.readFromDisk(FILENAME, createDefaultBotAdminData);
-};
-
-async function writeToDisk(data) {
-    return PersistUtil.writeToDisk(FILENAME, data);
-};
-
-function makeBotAdminData(roleId) {
-    return {
-        "RoleId": roleId
-    };
-}
-
-function createDefaultBotAdminData() {
-    return makeBotAdminData("");
-}
 
 module.exports.setBotAdmin = async (client, message, roleMention) => {
     client.debug.logTrace("setBotAdmin() invoked. roleMention = " + roleMention);
@@ -28,10 +8,9 @@ module.exports.setBotAdmin = async (client, message, roleMention) => {
         let botAdminRole = message.guild.roles.cache.get(roleMention.slice(3, -1));
     
         if (botAdminRole !== undefined) {
-            const data = makeBotAdminData(botAdminRole.id);
-            await writeToDisk(data);
-    
-            client.debug.logTrace("setBotAdmin() - successfully updated botAdminData to: " + JSON.stringify(data));
+            client.botConfig.botAdminRoleId = botAdminRole.id;
+            await client.botConfig.writeToDisk();
+
             message.channel.send(`${message.author}: Successfully set ${roleMention} as BotAdmin`);
         }            
     } else {
@@ -39,7 +18,6 @@ module.exports.setBotAdmin = async (client, message, roleMention) => {
     }
 };
 
-module.exports.checkPermissions = async (message) => {
-    const BotAdminData = await readFromDisk();
-    return message.member.roles.cache.has(BotAdminData.RoleId);
+module.exports.checkPermissions = async (client, message) => {
+    return message.member.roles.cache.has(client.botConfig.botAdminRoleId);
 }

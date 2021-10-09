@@ -29,7 +29,7 @@ module.exports.checkPermissions = async (client, message, command, perms) => {
 				return true;
 
 			case UserPermissions.BotAdmin:
-				return message.member.hasPermission("ADMINISTRATOR") || BotAdminProcessor.checkPermissions(message);
+				return /*message.member.hasPermission("ADMINISTRATOR") ||*/ BotAdminProcessor.checkPermissions(client, message);
 
 			case UserPermissions.ServerAdmin:
 				return message.member.hasPermission("ADMINISTRATOR");

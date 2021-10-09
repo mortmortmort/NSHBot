@@ -6,6 +6,7 @@ type BotConfigData = {
     debugLevel: DebugLevel;
     debugGuildId: string;
     debugChannelId: string;
+    botAdminRoleId: string;
 }
 
 export class BotConfig {
@@ -15,9 +16,10 @@ export class BotConfig {
 
     constructor() {
         this._data = {
-            debugLevel:     DebugLevel.OFF,
-            debugGuildId:   "",
-            debugChannelId: ""
+            debugLevel:      DebugLevel.OFF,
+            debugGuildId:    "",
+            debugChannelId:  "",
+            botAdminRoleId: ""
         };
     }
 
@@ -32,7 +34,11 @@ export class BotConfig {
         
         if (data.hasOwnProperty("debugChannelId")) {
             this._data.debugChannelId = data.debugChannelId;
-        }        
+        }
+        
+        if (data.hasOwnProperty("botAdminRoleId")) {
+            this._data.botAdminRoleId = data.botAdminRoleId;
+        }
     }
 
     readFromDisk(): void {
@@ -81,4 +87,11 @@ export class BotConfig {
         this._data.debugChannelId = debugChannelId;
     }
 
+    get botAdminRoleId(): string {
+        return this._data.botAdminRoleId;
+    }
+
+    set botAdminRoleId(botAdminRoleId: string) {
+        this._data.botAdminRoleId = botAdminRoleId;
+    }
 }
