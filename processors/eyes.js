@@ -63,14 +63,14 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
         const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
 
         if (emojiIcon === undefined) {
-            DebugProcessor.logMessageError(client, message, `addSystemToEyes() - unable to find icon for emoji '${emoji}'`);
+            client.debug.logError(`addSystemToEyes() - unable to find icon for emoji '${emoji}'`);
             return;
         }        
     } else {
         var unicodeEmoji = EmojiUnicodeMap.get(emoji);
 
         if (unicodeEmoji === undefined) {
-            DebugProcessor.logMessageError(client, message, `addSystemToEyes() - unexpected emoji '${emoji}'`);
+            client.debug.logError(`addSystemToEyes() - unexpected emoji '${emoji}'`);
             return;
         }
 
@@ -80,7 +80,7 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
    
     const emojiIcon = getEmojiIconFromEmojiName(message, emojiName);
 
-    DebugProcessor.logMessageTrace(client, message, `addSystemToEyes() invoked. systemName = ${systemName}, emoji = ${emoji}, emojiName = ${emojiName}, emojiIcon = ${emojiIcon}`);
+    client.debug.logTrace(`addSystemToEyes() invoked. systemName = ${systemName}, emoji = ${emoji}, emojiName = ${emojiName}, emojiIcon = ${emojiIcon}`);
 
     if (!validateSystemData(systemName, emojiName))
         return;
@@ -108,7 +108,7 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
 };
 
 module.exports.removeSystemFromEyes = async (client, message, systemName) => {
-    DebugProcessor.logMessageTrace(client, message,"removeSystemFromEyes invoked. systemName = " + systemName);
+    client.debug.logTrace("removeSystemFromEyes invoked. systemName = " + systemName);
 
 	var eyesData = await readFromDisk();
     
@@ -137,7 +137,7 @@ function generateMessageText(eyesData) {
 }
 
 module.exports.eyesCommand = async (client, message, args) => {
-    DebugProcessor.logMessageTrace(client, message, "eyesCommand() invoked");
+    client.debug.logTrace("eyesCommand() invoked");
 
     // Deep copy
     const eyesDataOnDisk = await readFromDisk();

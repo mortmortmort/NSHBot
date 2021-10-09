@@ -27,13 +27,13 @@ module.exports = (client, message) => {
             try {
                 cmd.run(client, message, args)
                 .catch((ex) => {
-                    DebugProcessor.logMessageError(client, message, 
+                    client.debug.logError(
                         `Exception caught trying to execute '${command}' with args = '${args}'. 
                         Exception text = '${ex}'
                         Exception stack = '${ex.stack}'`); 
                 });
             } catch (ex) {
-                DebugProcessor.logMessageError(client, message, 
+                client.debug.logError(
                     `Exception caught trying to execute '${command}' with args = '${args}'. 
                     Exception text = '${ex}'
                     Exception stack = '${ex.stack}'`);

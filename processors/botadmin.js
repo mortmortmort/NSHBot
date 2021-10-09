@@ -22,7 +22,7 @@ function createDefaultBotAdminData() {
 }
 
 module.exports.setBotAdmin = async (client, message, roleMention) => {
-    DebugProcessor.logMessageTrace(client, message, "setBotAdmin() invoked. roleMention = " + roleMention);
+    client.debug.logTrace("setBotAdmin() invoked. roleMention = " + roleMention);
 
     if (roleMention.startsWith("<@&") && roleMention.endsWith(">")) {
         let botAdminRole = message.guild.roles.cache.get(roleMention.slice(3, -1));
@@ -31,11 +31,11 @@ module.exports.setBotAdmin = async (client, message, roleMention) => {
             const data = makeBotAdminData(botAdminRole.id);
             await writeToDisk(data);
     
-            DebugProcessor.logMessageTrace(client, message, "setBotAdmin() - successfully updated botAdminData to: " + JSON.stringify(data));
+            client.debug.logTrace("setBotAdmin() - successfully updated botAdminData to: " + JSON.stringify(data));
             message.channel.send(`${message.author}: Successfully set ${roleMention} as BotAdmin`);
         }            
     } else {
-        DebugProcessor.logMessageError(client, message, "setBotAdmin() - unexpected role mention = '" + roleMention + "'");
+        client.debug.logError("setBotAdmin() - unexpected role mention = '" + roleMention + "'");
     }
 };
 

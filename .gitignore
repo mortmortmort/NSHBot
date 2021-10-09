@@ -2,3 +2,5 @@
 index.js
 botclient.js
 types/debugtypes.js
+util/botconfig.js
+util/botdebug.js

@@ -53,7 +53,7 @@ module.exports.addCommandToChannel = async (client, message, command) => {
     const guildId = message.guild.id;
     const channelId = message.channel.id;
 
-	DebugProcessor.logMessageTrace(client, message,"addCommandToChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
+	client.debug.logTrace("addCommandToChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
 
@@ -72,7 +72,7 @@ module.exports.removeCommandFromChannel = async (client, message, command) => {
     const guildId = message.guild.id;
     const channelId = message.channel.id;
     
-	DebugProcessor.logMessageTrace(client, message, "removeCommandFromChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
+	client.debug.logTrace("removeCommandFromChannel() invoked. command = " + command + " guildId = " + guildId + " channelId = " + channelId);
 
 	var commandData = await readFromDisk();
 
