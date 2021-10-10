@@ -1,5 +1,4 @@
 const Permissions = require("../permissions.js");
-const DebugProcessor = require("../processors/debug.js");
 
 module.exports = (client, message) => {
     // Ignore all bots

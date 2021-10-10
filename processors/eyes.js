@@ -1,5 +1,4 @@
 const PersistUtil = require("../persist/persist-util.js");
-const DebugProcessor = require("../processors/debug.js");
 const EmojiNameMap = require("emoji-name-map");
 const EmojiUnicodeMap = require("emoji-unicode-map");
 
