@@ -2,6 +2,7 @@
 index.js
 botclient.js
 types/debugtypes.js
+types/permissiontypes.js
 util/botconfig.js
 util/botdebug.js
 processors/botconfig.js
