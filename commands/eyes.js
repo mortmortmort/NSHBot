@@ -1,4 +1,4 @@
-const Permissions = require("../permissions.js");
+const Permissions = require("../types/permissiontypes.js");
 const EyesProcessor = require("../processors/eyes.js");
 
 const _eyesData = [

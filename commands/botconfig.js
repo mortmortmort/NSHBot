@@ -1,4 +1,4 @@
-const Permissions = require("../permissions.js");
+const Permissions = require("../types/permissiontypes.js");
 const BCP = require("../processors/botconfig");
 
 exports.getPermissions = () => {
