@@ -41,7 +41,19 @@ export class BotConfig {
         }
     }
 
-    readFromDisk(): void {
+    async readFromDisk(): Promise<void> {
+        try {
+            const data = JSONFile.readFileSync(BotConfig.DATAFILE);
+
+            this.setValuesFromJSON(data);
+
+            console.log("BotConfig::readFromDisk() ==> data = ", data);
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
+    readFromDiskSync(): void {
         try {
             const data = JSONFile.readFileSync(BotConfig.DATAFILE);
 

@@ -90,7 +90,7 @@ function initRelays() {
 
 function init() {
   const client = new BotClient();
-  client.botConfig.readFromDisk();
+  client.initialize();
   const discord_token = getDiscordToken();
   client.config = config;
   

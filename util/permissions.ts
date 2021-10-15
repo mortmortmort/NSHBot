@@ -1,8 +1,9 @@
-import { UserPermissions, ChannelPermissions, Permissions } from "../types/permissiontypes";
-import { BotClient } from "../botclient.js";
+// NPM modules
 import { Message, Permissions as DJSPermissions } from "discord.js";
 
-const CommandPermsProcessor = require("../processors/command-perms.js");
+// Local modules
+import { UserPermissions, ChannelPermissions, Permissions } from "../types/permissiontypes";
+import { BotClient } from "../botclient.js";
 
 async function checkUserPermissions(client: BotClient, message: Message, perms: Permissions) {
 	switch (perms.User) {
@@ -33,7 +34,7 @@ async function checkChannelPermissions(client: BotClient, message: Message, comm
 		case ChannelPermissions.Limited:
 			if (!message.guild) return false;
 
-			return CommandPermsProcessor.checkPermissions(message.guild.id, message.channel.id, command);
+			return client.acl.channelAclCheckPermission(command, message.guild.id, message.channel.id);
 
 		case ChannelPermissions.None:
 			return false;

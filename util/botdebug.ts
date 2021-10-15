@@ -47,44 +47,45 @@ export class BotDebug {
         return false;
     }
 
-    private async messageDebugChannel(text: string) {
+    private async messageDebugChannel(text: any[]) {
         let debugChannel: TextChannel = this._discordClient.channels.cache.get(this._botConfig.debugChannelId) as TextChannel;
-        
     
+        let message: string = text.map(element => { return typeof element === "string" ? element : JSON.stringify(element)}).join(" ");
+
         if (debugChannel !== undefined) {
             if (debugChannel.guild.id !== this._botConfig.debugGuildId) return;
     
-            await debugChannel.send(text);
+            await debugChannel.send(message);
         }
     }
 
-    async logError(text: string): Promise<void> {
-        text = "ERROR: " + text;
+    async logError(...text: any[]): Promise<void> {
+        text.unshift("ERROR:");
     
         if (this.checkLevelForMessageError()) {
             await this.messageDebugChannel(text);
         }
     
-        console.log(text);    
+        console.log.apply(console, text);
     }
     
-    async logDebug(text: string): Promise<void> {
-        text = "DEBUG: " + text;
+    async logDebug(...text: any[]): Promise<void> {
+        text.unshift("DEBUG:");
     
         if (this.checkLevelForMessageDebug()) {
             await this.messageDebugChannel(text);
         }
     
-        console.log(text);
+        console.log.apply(console, text);
     }
     
-    async logTrace(text: string): Promise<void> {
-        text = "TRACE: " + text;
+    async logTrace(...text: any[]): Promise<void> {
+        text.unshift("TRACE:");
     
         if (this.checkLevelForMessageTrace()) {
             await this.messageDebugChannel(text);
         }
     
-        console.log(text);
+        console.log.apply(console, text);
     }
 }

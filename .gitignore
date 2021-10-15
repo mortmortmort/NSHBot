@@ -6,6 +6,7 @@ types/permissiontypes.js
 util/botconfig.js
 util/botdebug.js
 util/permissions.js
+util/acl.js
 processors/botconfig.js
 events/message.js
 events/ready.js

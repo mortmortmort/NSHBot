@@ -20,6 +20,7 @@
     "esi-little-helper": "^1.1.0",
     "esijs": "^4.0.7",
     "eve-esi": "0.0.8",
+    "file-exists": "^5.0.1",
     "fs": "0.0.1-security",
     "jsonfile": "^6.1.0",
     "moment": "^2.29.1",
@@ -32,6 +33,7 @@
     "typescript": "^4.4.3"
   },
   "devDependencies": {
+    "@types/file-exists": "^5.0.0",
     "@types/node": "^16.10.3"
   }
 }

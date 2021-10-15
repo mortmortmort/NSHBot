@@ -1,6 +1,10 @@
+// NPM modules
 import { Client, ClientOptions, Intents } from "discord.js";
+
+// Local modules
 import { BotConfig } from "./util/botconfig";
 import { BotDebug } from "./util/botdebug";
+import { ACL } from "./util/acl";
 
 //import * as Enmap from "enmap";
 //import Enmap from "enmap";
@@ -13,6 +17,7 @@ export class BotClient extends Client {
     config: any;
     botConfig: BotConfig;
     debug: BotDebug;
+    acl: ACL;
 
     constructor() {
         let options: ClientOptions = {
@@ -29,5 +34,11 @@ export class BotClient extends Client {
         this.config = {};
         this.botConfig = new BotConfig();
         this.debug     = new BotDebug(this, this.botConfig);
+        this.acl       = new ACL(this.debug);
+    }
+
+    initialize() {
+        this.botConfig.readFromDisk();
+        this.acl.readFromDiskSync();
     }
 }
