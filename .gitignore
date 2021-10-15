@@ -5,3 +5,5 @@ types/debugtypes.js
 util/botconfig.js
 util/botdebug.js
 processors/botconfig.js
+events/message.js
+events/ready.js
