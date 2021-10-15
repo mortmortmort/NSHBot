@@ -5,6 +5,7 @@ types/debugtypes.js
 types/permissiontypes.js
 util/botconfig.js
 util/botdebug.js
+util/permissions.js
 processors/botconfig.js
 events/message.js
 events/ready.js
