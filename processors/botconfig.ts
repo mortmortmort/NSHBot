@@ -21,9 +21,15 @@ export class BotConfigProcessor {
             case "setdebugchannel":
                 return BotConfigProcessor.setDebugChannel(client, message, args);
     
-
             case "setdebuglevel":
                 return BotConfigProcessor.setDebugLevel(client, message, args);
+
+            case "addcommand":
+                return BotConfigProcessor.addCommand(client, message, args);
+
+            case "removecommand":
+                return BotConfigProcessor.removeCommand(client, message, args);
+                            
 
             default:
                 client.debug.logDebug(`BotConfigProcessor::processCommand() => Unexpected command ('${cmd}')`);
@@ -38,8 +44,10 @@ export class BotConfigProcessor {
         text += `\`\`\``;
         text += `!botconfig help -- print usage information\n`;
         text += `!botconfig setbotadmin <@RoleMention> -- sets <@RoleMention> as 'BotAdmin'\n`;
-        text += `!botconfig setdebugchannel -- set output channel for debug message\n`;
+        text += `!botconfig setdebugchannel -- set current channel as output channel for debug message\n`;
         text += `!botconfig setdebuglevel <OFF|ERROR|DEBUG|TRACE> -- set logging verbosity\n`;
+        text += `!botconfig addcommand <command> -- add <command> to whitelist for current channel\n`;
+        text += `!botconfig removecommand <command> -- remove <command> from whitelist for current channel\n`;
         text += `\`\`\``;
 
         message.reply(text);
@@ -110,4 +118,37 @@ export class BotConfigProcessor {
         message.reply(`Successfully set debugLevel to ${debugLevel}`);
     }
     
+    private static async addCommand(client: BotClient, message: Message, args: string[]): Promise<void> {
+        client.debug.logTrace(`BotConfigProcessor::addCommand() invoked with args = '${args}'`);
+    
+        if (!message.guild) return;
+
+        let command = args.shift();
+        if (command === undefined) {
+            client.debug.logDebug("BotConfigProcessor::addCommand() => command is undefined!");
+            return;
+        }        
+
+        client.acl.channelAclAdd(command, message.guild.id, message.channel.id);
+        await client.acl.writeToDisk();
+    
+        message.reply(`Added '${client.config.prefix}${command}' access to this channel`);
+    }
+
+    private static async removeCommand(client: BotClient, message: Message, args: string[]): Promise<void> {
+        client.debug.logTrace(`BotConfigProcessor::removeCommand() invoked with args = '${args}'`);
+
+        if (!message.guild) return;
+
+        let command = args.shift();
+        if (command === undefined) {
+            client.debug.logDebug("BotConfigProcessor::removeCommand() => command is undefined!");
+            return;
+        }      
+
+        client.acl.channelAclRemove(command, message.guild.id, message.channel.id);
+        await client.acl.writeToDisk();
+    
+        message.reply(`Removed '${client.config.prefix}${command}' access from this channel`);
+    }    
 }
