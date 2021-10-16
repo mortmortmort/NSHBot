@@ -1,4 +1,7 @@
+// NPM modules
 import { Message } from "discord.js";
+
+// Local modules
 import { BotClient } from "../botclient";
 import { DebugLevel, debugLevelFromString } from "../types/debugtypes";
 
