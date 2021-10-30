@@ -98,24 +98,6 @@ function initEvents(client: BotClient) {
   client.on("messageCreate", MessageCreateEventHandler.bind(null, client));
 
   return;
-  // This loop reads the /events/ folder and attaches each event file to the appropriate event.
-  FS.readdir("./events/", (err, files) => {
-    if (err) {
-      return console.error(err);
-    }
-
-    files.forEach(file => {
-      if (!file.endsWith(".js")) {
-        return;
-      }
-      
-      const event = require(`./events/${file}`);
-      let eventName = file.split(".")[0];
-      
-      client.on(eventName, event.bind(null, client));
-      delete require.cache[require.resolve(`./events/${file}`)];
-    });
-  });
 }
 
 function initCommands(client: BotClient) {
