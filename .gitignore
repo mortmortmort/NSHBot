@@ -1,1 +1,13 @@
 **/node_modules
+index.js
+botclient.js
+types/debugtypes.js
+types/permissiontypes.js
+util/botconfig.js
+util/botdebug.js
+util/permissions.js
+util/acl.js
+processors/botconfig.js
+processors/eyes2.js
+events/message.js
+events/ready.js

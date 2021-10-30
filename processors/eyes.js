@@ -1,5 +1,6 @@
 const PersistUtil = require("../persist/persist-util.js");
-const DebugProcessor = require("../processors/debug.js");
+const EmojiNameMap = require("emoji-name-map");
+const EmojiUnicodeMap = require("emoji-unicode-map");
 
 const FILENAME = "eyes.json";
 
@@ -33,21 +34,52 @@ function createDefaultEyesData() {
     return makeEyesData();
 }
 
+function getEmojiIconFromEmojiName(message, emojiName) {
+    const customEmojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+
+    if (customEmojiIcon) {
+        return customEmojiIcon;
+    }
+
+    const unicodeEmojiIcon = EmojiNameMap.get(emojiName);
+
+    if (unicodeEmojiIcon) {
+        return unicodeEmojiIcon;
+    }
+
+    console.log(`ERROR: Unable to retrieve emoji for emojiName = ${emojiName}`);
+}
+
 module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
     var emojiName;
     if (emoji.startsWith("<") && emoji.endsWith(">")) {
-        // this is an emoji, format: '<:really:889720025915744286>'
+        // this is a custom emoji, format: '<:really:889720025915744286>'
         var i1 = emoji.indexOf(':') + 1;
         var i2 = emoji.indexOf(':', i1);
 
         emojiName = emoji.slice(i1, i2);
+
+        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+
+        if (emojiIcon === undefined) {
+            client.debug.logError(`addSystemToEyes() - unable to find icon for emoji '${emoji}'`);
+            return;
+        }        
     } else {
-        emojiName = emoji;
+        var unicodeEmoji = EmojiUnicodeMap.get(emoji);
+
+        if (unicodeEmoji === undefined) {
+            client.debug.logError(`addSystemToEyes() - unexpected emoji '${emoji}'`);
+            return;
+        }
+
+        emojiName = unicodeEmoji;
     }
 
-    const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === emojiName);
+   
+    const emojiIcon = getEmojiIconFromEmojiName(message, emojiName);
 
-    DebugProcessor.logMessageTrace(client, message,"addCommandToChannel invoked. systemName = " + systemName + " emoji = " + emoji + " emojiName = " + emojiName);
+    client.debug.logTrace(`addSystemToEyes() invoked. systemName = ${systemName}, emoji = ${emoji}, emojiName = ${emojiName}, emojiIcon = ${emojiIcon}`);
 
     if (!validateSystemData(systemName, emojiName))
         return;
@@ -75,7 +107,7 @@ module.exports.addSystemToEyes = async (client, message, systemName, emoji) => {
 };
 
 module.exports.removeSystemFromEyes = async (client, message, systemName) => {
-    DebugProcessor.logMessageTrace(client, message,"removeSystemFromEyes invoked. systemName = " + systemName);
+    client.debug.logTrace("removeSystemFromEyes invoked. systemName = " + systemName);
 
 	var eyesData = await readFromDisk();
     
@@ -104,14 +136,14 @@ function generateMessageText(eyesData) {
 }
 
 module.exports.eyesCommand = async (client, message, args) => {
-    DebugProcessor.logMessageTrace(client, message, "eyesCommand() invoked");
+    client.debug.logTrace("eyesCommand() invoked");
 
     // Deep copy
     const eyesDataOnDisk = await readFromDisk();
     var eyesData = JSON.parse(JSON.stringify(eyesDataOnDisk));
         
     eyesData.forEach(systemData => {
-        const emojiIcon = message.guild.emojis.cache.find(emoji => emoji.name === systemData.emojiName);
+        const emojiIcon = getEmojiIconFromEmojiName(message, systemData.emojiName);
         systemData["emojiIcon"] = emojiIcon;        
         systemData["currentEyes"] = [];
     });    
@@ -122,13 +154,17 @@ module.exports.eyesCommand = async (client, message, args) => {
         eyesData.forEach(systemData => targetMessage.react(systemData.emojiIcon));
 
         client.on('messageReactionAdd', (reaction, user) => {
+            if (reaction.message.id !== targetMessage.id) return;
+
             if (user.bot) return;
 
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
             var displayName = gmUser.displayName;
             
+            var emojiName = (reaction.emoji.id !== null) ? reaction.emoji.name : EmojiUnicodeMap.get(reaction.emoji.name);
+
             eyesData.forEach(systemData => {
-                if (reaction.emoji.name === systemData.emojiIcon.name) {
+                if (emojiName === systemData.emojiName) {
                     systemData.currentEyes.push(displayName);
                     targetMessage.edit(generateMessageText(eyesData));
                 }
@@ -136,13 +172,17 @@ module.exports.eyesCommand = async (client, message, args) => {
         });
         
         client.on('messageReactionRemove', (reaction, user) => {
+            if (reaction.message.id !== targetMessage.id) return;
+
             if (user.bot) return;
 
             var gmUser = message.guild.members.cache.find(cacheUser => cacheUser.id === user.id);
             var displayName = gmUser.displayName;
+
+            var emojiName = (reaction.emoji.id !== null) ? reaction.emoji.name : EmojiUnicodeMap.get(reaction.emoji.name);
             
             eyesData.forEach(systemData => {
-                if (reaction.emoji.name === systemData.emojiIcon.name) {
+                if (emojiName === systemData.emojiName) {
                     systemData.currentEyes = systemData.currentEyes.filter(item => !(item === displayName));
                     targetMessage.edit(generateMessageText(eyesData));
                 }

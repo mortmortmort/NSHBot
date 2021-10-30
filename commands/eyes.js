@@ -1,5 +1,6 @@
-const Permissions = require("../permissions.js");
+const Permissions = require("../types/permissiontypes.js");
 const EyesProcessor = require("../processors/eyes.js");
+const ECP = require("../processors/eyes2");
 
 const _eyesData = [
     { "systemName": "Kourmonen", "emojiName": "johnbob" },
@@ -13,5 +14,6 @@ exports.getPermissions = (client, message, args) => {
 };
 
 exports.run = async (client, message, args) => {    
-    return EyesProcessor.eyesCommand(client, message, args);
+    return ECP.EyesProcessor.processCommand(client, message, args);
+    //return EyesProcessor.eyesCommand(client, message, args);
 }
