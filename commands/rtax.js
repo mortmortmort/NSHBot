@@ -1,5 +1,4 @@
 const Discord = require("discord.js");
-const client = new Discord.Client();
 const countdown = require('moment-countdown');
 var moment = require('moment');
 const superagent = require('superagent');
