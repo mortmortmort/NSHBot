@@ -1,9 +1,10 @@
-const rp = require("request-promise");
-const Discord = require("discord.js");
-const countdown = require('moment-countdown');
-const moment = require('moment');
+const Permissions = require("../types/permissiontypes.js");
+const Processor = require("../processors/legacycommands");
 
+exports.getPermissions = () => {
+    return { User: Permissions.UserPermissions.Public, Channel: Permissions.ChannelPermissions.All };
+};
 
 exports.run = async (client, message, args) => {
-    message.reply(`It is ${moment.utc(moment()).format("HH:mm")} EVE`).catch(console.error);
-}
+    return Processor.LegacyCommands.time(client, message, args);
+};

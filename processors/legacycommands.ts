@@ -7,6 +7,7 @@ import { DebugLevel, debugLevelFromString } from "../types/debugtypes";
 
 const rp = require("request-promise");
 const fetch = require('node-fetch');
+const moment = require('moment');
 
 async function getSystemIdFromSystemName(systemName: string): Promise<number> {
     let data = await fetch(`https://esi.evetech.net/latest/search/?categories=solar_system&datasource=tranquility&language=en-us&search=${systemName}&strict=false`);
@@ -125,4 +126,26 @@ export class LegacyCommands {
 
         message.channel.send(data.players + " players online currently").catch(console.error);
     }
+
+    static async time(client: BotClient, message: Message, args: string[]): Promise<void> {
+        message.reply(`It is ${moment.utc(moment()).format("HH:mm")} EVE`).catch(console.error);
+    }
+
+    static async thera(client: BotClient, message: Message, args: string[]): Promise<void> {
+        let thera = await fetch(`https://www.eve-scout.com/api/wormholes`);
+        let json = await thera.json();
+
+        let theraSort = json.sort((a: { jumps: number; }, b: { jumps: number; }) => (a.jumps > b.jumps ? 1 : -1));
+        theraSort = theraSort.filter((item: { jumps: number; }) => item.jumps !== 0);
+
+        let theraHoles: string[] = [];
+        theraSort.forEach((wh: { destinationSolarSystem: { security: number; name: any; region: { name: any; }; }; }) => {
+            if (wh.destinationSolarSystem.security != -0.99) {
+                theraHoles.push(`\nSystem: ${wh.destinationSolarSystem.name} (${wh.destinationSolarSystem.region.name})`);
+            }
+        });
+
+        message.reply(theraHoles.join(""))
+    }    
 };
+
