@@ -7,6 +7,7 @@ util/botconfig.js
 util/botdebug.js
 util/permissions.js
 util/acl.js
+processors/legacycommands.js
 processors/botconfig.js
 processors/eyes2.js
 events/message.js
