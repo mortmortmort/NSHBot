@@ -114,4 +114,15 @@ export class LegacyCommands {
             message.reply("I don't recognize the arguements you provided. The command is either: !jr <systemFrom> <systemTo> **OR** !jr blops <systemFrom> <systemTo> **OR** !jr jf <systemFrom> <systemTo>")
         }
     }
+
+    static async players(client: BotClient, message: Message, args: string[]): Promise<void> {
+        const request = {
+            uri: "https://esi.evetech.net/latest/status/?datasource=tranquility",
+        };
+
+        let response = await rp(request);
+        let data = JSON.parse(response);
+
+        message.channel.send(data.players + " players online currently").catch(console.error);
+    }
 };

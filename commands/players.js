@@ -1,13 +1,10 @@
-const rp = require("request-promise");
-async function player() {
-  const request = {
-    uri: "https://esi.evetech.net/latest/status/?datasource=tranquility",
-  };
-  let response = rp(request);
-  let data = JSON.parse(await response);
-  return data.players;
-}
+const Permissions = require("../types/permissiontypes.js");
+const Processor = require("../processors/legacycommands");
+
+exports.getPermissions = () => {
+    return { User: Permissions.UserPermissions.Public, Channel: Permissions.ChannelPermissions.All };
+};
+
 exports.run = async (client, message, args) => {
-    const players = await player();
-    message.channel.send(players + " players online currently").catch(console.error);
-}
+    return Processor.LegacyCommands.players(client, message, args);
+};
